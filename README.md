@@ -11,4 +11,4 @@ For balancing purposes, the recipes have been changed so that only one unit is s
 
 To make the combat robots more accessible in the early game, all types are unlocked after researching combat robotics 1.
 
-Since I'm not sure yet about these balanches, please let me what I can change to make them more balanced.
+Since I'm not sure yet about these balances, please let me what I can change to make them more balanced.
