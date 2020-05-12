@@ -1,0 +1,11 @@
+{
+	"name":"CombatRobotsOverhaul",
+	"version": "0.1.0",
+	"author": "Wannie",
+	"title": "Combat Robots Overhaul",
+	"factorio_version": "0.18",
+	"dependencies": ["base >= 0.18"],
+	"homepage": "www.mods.factorio.com/mod/CombatRobotsOverhaul",
+	"description": "Overhaul of Combat Robots. For more details, visit the mod page."
+
+}
