@@ -1,5 +1,5 @@
 # Combat Robots Overhaul
-This mod overhauls Factorio's vanilla Combat Robots to make them more useful and to automate the fight against biters.
+This mod overhauls Factorio's vanilla Combat Robots to make them more useful by automating the fight against biters.
 
 Destroyer Units will automatically attack every biter nest that has been discovered either by the player or by radar.
 
