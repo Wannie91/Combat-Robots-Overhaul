@@ -1,14 +1,14 @@
 # Combat Robots Overhaul
-This mod overhauls Factorio's vanilla Combat Robots to make them more useful by automating the fight against biters.
+This mod overhauls Factorio's vanilla Combat Robots to make them more useful against biters. 
 
-Destroyer Units will automatically attack every biter nest that has been discovered either by the player or by radar.
+Destroyer Units will automatically attack every biter nests (and worm) that have been discovered either by the player or by radar.
 
-Defender Units will either follow and defend their player, or defend the base in case of an attack. (Toggleable)
+Defender Units will either follow the player, or automatically defend the base in case of an enemy attack. (Behaviour controlled by Toggleable shortcut)
 
-Distractor Units have been renamed to Sentry Units and are used as mobile turrets. They patrol the area where they have been thrown at.
+Distractor Units have been renamed to Sentry Units and have more or less keept their old behaviour. They patroul the area where they have been thrown at and act as cheap mobile turrets.
 
-For balancing purposes, the recipes have been changed so that only one unit is spawned per capsule. Once thrown, they can't be reclaimed anymore but in return have an unlimited lifespan and can be repaired. Furthermore, the maximum combat robot number per player is counted for each group seperately.
+For balancing purposes, the recipes of the combat robots have been changed so that only one unit is spawned per capsule. Once thrown, the robots can't be reclaimed anymore. In return, they have a unlimited lifespan and can be repaired. 
 
-To make the combat robots more accessible in the early game, all types are unlocked after researching combat robotics 1.
+Furthermore, each group is limited to the players maximum combat robot following count seperatedly. To make the technology more accessible in the game, all the robots recipes are unlocked after researching combat robotics 1. Their recipes has also changed. 
 
-Since I'm not sure yet about these balances, please let me what I can change to make them more balanced.
+However, since I'm not sure yet about these balances, please let me what you thinkg or what I can change to make them more balanced.
