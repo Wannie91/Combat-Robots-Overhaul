@@ -11,15 +11,13 @@ data:extend({
 				type = "instant",
 				target_effects = 
 				{
-					
 					type = "create-entity",
-					show_in_tooltips = true,
-					entity_name = "destroyer-unit",
+                    entity_name = "destroyer-unit",
+                    show_in_tooltips = true,
 					trigger_created_entity = "true"
 					--offsets = { {-0.7, -0.7}, {-0.7, 0.7}, {0.7, -0.7}, {0.7, 0.7}, {0, 0} }
-				
 				}
-			}
+			} 
 		},
 		light = { intensity = 0.5, size = 4 },
 		enable_drawing_with_mask = true,
@@ -71,6 +69,7 @@ data:extend({
                 {
                     type = "create-entity",
                     entity_name = "defender-unit",
+                    show_in_tooltips = true,
                     trigger_created_entity = true,
                 }
             }
@@ -124,9 +123,12 @@ data:extend({
                 type = "instant",
                 target_effects = 
                 {
-                    type = "create-entity",
-                    entity_name = "sentry-unit",
-					trigger_created_entity = true
+                    {
+                        type = "create-entity",
+                        entity_name = "sentry-unit",
+                        show_in_tooltips = true,
+                        trigger_created_entity = true
+                    }
                 }
             }
         },

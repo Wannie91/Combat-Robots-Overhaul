@@ -505,7 +505,7 @@ local combatRobots =
 		icon = "__base__/graphics/icons/destroyer.png",
 		icon_size = 64,
 		icon_mipmaps = 4,
-		flags = { "placeable-player", "player-creation", "placeable-off-grid", "not-repairable" },
+		flags = { "placeable-player", "player-creation", "placeable-off-grid" },
 		minable = { mining_time = 0.5 },
 		placeable_by = { item = "destroyer-unit-capsule", count = 1 },
 		resistance =
@@ -528,7 +528,7 @@ local combatRobots =
 		selection_box = { {-0.5, -0.5}, {0.5, 0.5} },	
 		hit_visualization_box = { {-0.1, -1.4}, {0.1, -1.3} },
 		damaged_trigger_effect = hit_effects.flying_robot(),
-		collision_mask = {"layer-14"},			
+		collision_mask = {"layer-14", "train-layer"},			
 		dying_explosion = "destroyer-robot-explosion",
 		vision_distance = 45,
 		distance_per_frame = 0.15,
@@ -605,7 +605,7 @@ local combatRobots =
 		icon = "__base__/graphics/icons/defender.png",
 		icon_size = 64,
 		icon_mipmaps = 4,
-		flags = { "placeable-player", "player-creation", "placeable-off-grid", "not-repairable" },
+		flags = { "placeable-player", "player-creation", "placeable-off-grid" },
 		minable = { mining_time = 0.5 },
 		placeable_by  = { item = "defender-unit-capsule", count = 1 },
 		resistance = 
@@ -634,7 +634,7 @@ local combatRobots =
         distraction_cooldown = 300,
         friendly_map_color = {0, 0, 1},
         radar_range = 1,
-		collision_mask = {"layer-14"},
+		collision_mask = {"layer-14", "train-layer"},
 		working_sound = 
 		{
 			sound = 
@@ -716,7 +716,7 @@ local combatRobots =
         icon = "__base__/graphics/icons/distractor.png",
         icon_size = 64,
         icon_mipmaps = 4,
-        flags = { "placeable-player", "player-creation", "placeable-off-grid", "not-repairable" },
+        flags = { "placeable-player", "player-creation", "placeable-off-grid" },
 		minable = { mining_time = 0.5 },
 		placeable_by = { item = "sentry-unit-capsule", count = 1},
         resistance = 
@@ -746,7 +746,7 @@ local combatRobots =
         distraction_cooldown = 300,
         friendly_map_color = {0, 0, 1},
         radar_range = 1,
-        collision_mask = {"layer-14"},
+        collision_mask = {"layer-14", "train-layer"},
         working_sound = {
 			sound = 
 			{

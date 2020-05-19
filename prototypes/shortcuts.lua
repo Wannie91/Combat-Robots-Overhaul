@@ -4,7 +4,7 @@ data:extend({
         name = "toggle-defender",
         action = "lua",
         order = "c[CombatRobots]",
-        technology_to_unlcok = "combat-robotics",
+        technology_to_unlock = "combat-robotics",
         toggleable = true,
         icon = {
             filename = "__CombatRobotsOverhaul__/graphics/icons/toogle-defender-x32.png",
