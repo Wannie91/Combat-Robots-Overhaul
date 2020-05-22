@@ -38,7 +38,6 @@ function combatRobotOverhaul_init()
 	for _, player in pairs(game.players) do
 		initUnitGroupForPlayer(player.index)
 	end
-
 end
 
 function initUnitGroupForPlayer(player_index) 
@@ -83,6 +82,8 @@ function usedCapsule(event)
 			initUnitGroupForPlayer(player.index)
 		end
 
+		local unitType = item.name:gsub("-capsule","")
+
 		-- get meberCount or leave it at zero if no combat group for this type has been created
 		if global.combatUnitGroups[player.index][unitType] then
 			memberCount = global.combatUnitGroups[player.index][unitType].memberCount
@@ -90,17 +91,26 @@ function usedCapsule(event)
 
 		if memberCount <= game.forces.player.maximum_following_robot_count then 
 			--handle prototype creation differently depending if player has character or is in sandbox mode (no character)
-			if player.character then 
-				game.surfaces[1].create_entity{ name = item.name, player = player, position = player.position, target = event.position, force = player.force, source = player.character, speed = 0.3, max_range = 25 }
+
+			if memberCount > 0 and global.combatUnitGroups[player.index][unitType].unitGroup.command and global.combatUnitGroups[player.index][unitType].unitGroup.command.type ~= defines.command.wander then 
+			
+
+				player.create_local_flying_text{ text = { "messages.attack_started" }, position = event.position }
+				player.insert{ name = item.name, count = 1 }
 			else
-				local unitType = item.name:gsub("-capsule","")
-				local entity = game.surfaces[1].create_entity{ name = unitType, player = player, position = player.position, force = player.force }
-				
-				-- raise event with event.entity and event.source.player.index
-				script.raise_event(defines.events.on_trigger_created_entity, { entity = entity, source = { player = { index = player.index }}})
+				if player.character then 
+					game.surfaces[1].create_entity{ name = item.name, player = player, position = player.position, target = event.position, force = player.force, source = player.character, speed = 0.3, max_range = 25 }
+				else
+
+					local entity = game.surfaces[1].create_entity{ name = unitType, player = player, position = player.position, force = player.force }
+					
+					-- raise event with event.entity and event.source.player.index
+					script.raise_event(defines.events.on_trigger_created_entity, { entity = entity, source = { player = { index = player.index }}})
+				end
 			end
 		else
-			player.create_local_flying_text{ text = {"messages.max_type_reached", combatRobot}, position = event.position }
+			player.create_local_flying_text{ text = {"messages.max_type_reached", unitType}, position = event.position }
+			player.insert{ name = item.name, count = 1 }
 		end
 	end
 end
@@ -207,7 +217,7 @@ function handleUnitGroupsOnTick(event)
 
 				local waitTick = unit.createdTick + ( settings.global["time-before-attack"].value * 60)
 
-				if game.tick > waitTick and next(global.attackList) then 
+				if game.tick > waitTick then 
 					handleDestroyerUnit(unit.unitGroup)
 				end
 
@@ -227,16 +237,16 @@ function handleDestroyerUnit(unitGroup)
 	
 	if next(global.attackList) then
 
-			if not unitGroup.command or unitGroup.command.type ~= defines.command.attack then 
+		if not unitGroup.command or unitGroup.command.type ~= defines.command.attack_area then 
 
-				local targetEntity = unitGroup.surface.get_closest(unitGroup.position, global.attackList)
+			local targetEntity = unitGroup.surface.get_closest(unitGroup.position, global.attackList)
 
-				if targetEntity and targetEntity.valid then 
-
-					unitGroup.set_command({ type = defines.command.attack, target = targetEntity, distraction = defines.distraction.by_enemy })
-					unitGroup.start_moving()
-				end
+			if targetEntity and targetEntity.valid then 
+				unitGroup.set_command({ type = defines.command.attack_area, destination = targetEntity.position, radius = 20, diststraction = defines.distraction.by_enemy })
+				--unitGroup.set_command({ type = defines.command.attack, target = targetEntity, distraction = defines.distraction.by_enemy })
+				unitGroup.start_moving()
 			end
+		end
 	elseif not unitGroup.command or unitGroup.command.type ~= defines.command.wander then
 		unitGroup.set_command({ type = defines.command.wander, radius = 10, distraction = defines.distraction.by_enemy })
 		unitGroup.start_moving()
@@ -247,7 +257,7 @@ function defendPlayer(unitGroup, player)
 
 	local defender_distance = settings.get_player_settings(player.index)["defender-distance"].value
 
-	if not unitGroup.command or unitGroup.command.type ~= 2 then 
+	if unitGroup.state == defines.group_state.gathering or not unitGroup.command or unitGroup.command.type ~= defines.command.go_to_location then 
 
 		if player.character then 
 			unitGroup.set_command({ type = defines.command.go_to_location, destination_entity = player.character, radius = defender_distance, distraction = defines.distraction.by_enemy })
@@ -265,13 +275,13 @@ function defendBase(unitGroup)
 
 		for _, entity in pairs(global.defendList) do
 
-			if not unitGroup.command or unitGroup.command.type ~= defines.command.attack then
+			if unitGroup.state == defines.group_state.gathering or not unitGroup.command or unitGroup.command.type ~= defines.command.attack then
 			
 				local targetEntity = unitGroup.surface.get_closest(unitGroup.position, global.defendList)
 
 				if targetEntity and targetEntity.valid and getDistance(targetEntity.position, unitGroup.position) < settings.global["base-defender-radius"].value then 
 
-					unitGroup.set_command({ type = defines.command.attack, target = targetEntity, radius = 20, distraction = defines.distraction.by_enemy })
+					unitGroup.set_command({ type = defines.command.attack, target = targetEntity.position, distraction = defines.distraction.by_enemy })
 					unitGroup.start_moving()
 				end		
 			end
