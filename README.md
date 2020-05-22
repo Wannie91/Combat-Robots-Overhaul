@@ -5,7 +5,7 @@ Destroyer Units will automatically attack every biter nests (and worm) that have
 
 Defender Units will either follow the player, or automatically defend the base in case of an enemy attack. (Behaviour controlled by Toggleable shortcut)
 
-Distractor Units have been renamed to Sentry Units and have more or less keept their old behaviour. They patroul the area where they have been thrown at and act as cheap mobile turrets.
+Distractor Units have been renamed to Sentry Units and have more or less keept their old behaviour. They patrol the area where they have been thrown at and act as cheap mobile turrets.
 
 For balancing purposes, the recipes of the combat robots have been changed so that only one unit is spawned per capsule. Once thrown, the robots can't be reclaimed anymore. In return, they have a unlimited lifespan and can be repaired. 
 
