@@ -1,7 +1,7 @@
 # Combat Robots Overhaul
-This mod overhauls Factorio's vanilla Combat Robots to make them more useful against biters. 
+This mod overhauls Factorio's vanilla Combat Robots to make them more useful in the fight against biters. 
 
-Destroyer Units will automatically attack every biter nests (and worm) that have been discovered either by the player or by radar.
+Destroyer Units will automatically attack every biter nests (and worms) that have been discovered either by the player or by radar.
 
 Defender Units will either follow the player, or automatically defend the base in case of an enemy attack. (Behaviour controlled by Toggleable shortcut)
 
@@ -11,4 +11,4 @@ For balancing purposes, the recipes of the combat robots have been changed so th
 
 Furthermore, each group is limited to the players maximum combat robot following count seperatedly. To make the technology more accessible in the game, all the robots recipes are unlocked after researching combat robotics 1. Their recipes has also changed. 
 
-However, since I'm not sure yet about these balances, please let me what you thinkg or what I can change to make them more balanced.
+However, since I'm not sure yet about these balances, please let me what you think or what I can change to make them more balanced.
