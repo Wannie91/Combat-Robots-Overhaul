@@ -1,5 +1,18 @@
 data:extend({
     {
+        type = "bool-setting",
+        name = "enable-vanilla-combatrobots",
+        setting_type = "startup",
+        default_value = false
+    },
+    {
+        type = "string-setting",
+        name = "defense_exclude_list",
+        setting_type = "runtime-global",
+        default_value = "defender-unit,sentry-unit,destroyer-unit,rail",
+        allow_blank = true
+    },
+    {
         type = "int-setting", 
         name = "time-before-attack",
         setting_type = "runtime-global",
