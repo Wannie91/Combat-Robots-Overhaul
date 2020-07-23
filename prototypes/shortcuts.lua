@@ -5,6 +5,7 @@ data:extend({
         action = "lua",
         order = "c[CombatRobots]",
         technology_to_unlock = "combat-robotics",
+        associated_control_input = "keyboard-toggle-defender",
         toggleable = true,
         icon = {
             filename = "__CombatRobotsOverhaul__/graphics/icons/toogle-defender-x32.png",

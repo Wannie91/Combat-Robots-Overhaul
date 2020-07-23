@@ -13,18 +13,33 @@ function shallowcopy(orig)
     return copy
 end
 
-function tableContainsValue(table, paramVal)
-    for key, value in pairs(table) do
-        if value == paramVal or key == paramVal then 
+function tableContainsValue(table, value)
+
+    for key, tableValue in pairs(table) do
+        if tableValue == value or key == value then
             return key
         end
     end
+
     return false
+
+end
+
+function removeValueFromTable(table, value)
+
+    local key = tableContainsValue(table, value)
+
+    if key then
+        table[key] = nil
+    end
+
 end
 
 function getDistance(pos1, pos2) 
+
     local pxpx = pos1.x - pos2.x
     local pypy = pos1.y - pos2.y
 
     return (pxpx * pxpx + pypy * pypy) ^ 0.5
+
 end

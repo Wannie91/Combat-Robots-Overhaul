@@ -505,8 +505,9 @@ local combatRobots =
 		icon = "__base__/graphics/icons/destroyer.png",
 		icon_size = 64,
 		icon_mipmaps = 4,
-		flags = { "placeable-player", "player-creation", "placeable-off-grid" },
-		minable = { mining_time = 0.5 },
+		flags = { "player-creation", "placeable-off-grid" },
+		has_belt_immunity = true,
+		minable = { mining_time = 0.5, result = "destroyer-unit-capsule" },
 		placeable_by = { item = "destroyer-unit-capsule", count = 1 },
 		resistance =
 		{
@@ -522,7 +523,7 @@ local combatRobots =
 
 		subgroup = "capsule",
 		order = "e-a-c",
-		max_health = 60,
+		max_health = 120,
 		alert_when_damaged = false,
 		collision_box = { {0, 0}, {0, 0} },
 		selection_box = { {-0.5, -0.5}, {0.5, 0.5} },	
@@ -530,7 +531,7 @@ local combatRobots =
 		damaged_trigger_effect = hit_effects.flying_robot(),
 		collision_mask = {"layer-14", "train-layer"},			
 		dying_explosion = "destroyer-robot-explosion",
-		vision_distance = 45,
+		vision_distance = 20,
 		distance_per_frame = 0.15,
 		pollution_to_join_attack = 0,
         distraction_cooldown = 300,
@@ -587,7 +588,7 @@ local combatRobots =
 		movement_speed = 0.1,
 		distance_per_frame = 0.1,
 		min_pursue_time = 10 * 60,
-		max_pursue_distance = 50,
+		max_pursue_distance = 25,
 		run_animation = 
 		{
 			layers = 
@@ -605,8 +606,9 @@ local combatRobots =
 		icon = "__base__/graphics/icons/defender.png",
 		icon_size = 64,
 		icon_mipmaps = 4,
-		flags = { "placeable-player", "player-creation", "placeable-off-grid" },
-		minable = { mining_time = 0.5 },
+		flags = { "player-creation", "placeable-off-grid" },
+		has_belt_immunity = true,
+		minable = { mining_time = 0.5, result = "defender-unit-capsule" },
 		placeable_by  = { item = "defender-unit-capsule", count = 1 },
 		resistance = 
 		{
@@ -622,8 +624,8 @@ local combatRobots =
 		},
 		subgroup = "capsule",
 		order ="e-a-a",
-		max_health = 60,
-		vision_distance = 15,
+		max_health = 80,
+		vision_distance = 20,
 		alert_when_damaged = false,
 		collision_box = {{0, 0}, {0, 0}},
 		selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
@@ -634,7 +636,7 @@ local combatRobots =
         distraction_cooldown = 300,
         friendly_map_color = {0, 0, 1},
         radar_range = 1,
-		collision_mask = {"layer-14", "train-layer"},
+		collision_mask = {"layer-14"},
 		working_sound = 
 		{
 			sound = 
@@ -716,8 +718,9 @@ local combatRobots =
         icon = "__base__/graphics/icons/distractor.png",
         icon_size = 64,
         icon_mipmaps = 4,
-        flags = { "placeable-player", "player-creation", "placeable-off-grid" },
-		minable = { mining_time = 0.5 },
+		flags = { "player-creation", "placeable-off-grid" },
+		has_belt_immunity = true,
+		minable = { mining_time = 0.5, result = "sentry-unit-capsule" },
 		placeable_by = { item = "sentry-unit-capsule", count = 1},
         resistance = 
         {
@@ -733,14 +736,14 @@ local combatRobots =
         },
         subgroup = "capsule",
         order = "e-a-b", 
-        max_health = 90,
+        max_health = 100,
         alert_when_damaged = true,
         collision_box = {{0, 0}, {0, 0}},
         selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
         hit_visualization_box = {{-0.1, -1.1}, {0.1, -1.0}},
         damaged_trigger_effect = hit_effects.flying_robot(),
         dying_explosion = "distractor-robot-explosion",
-        vision_distance = 12,
+        vision_distance = 20,
 		distance_per_frame = 0.15,
 		pollution_to_join_attack = 0,
         distraction_cooldown = 300,
@@ -792,7 +795,7 @@ local combatRobots =
 					}
 				}
 			},
-			cooldown = 6,
+			cooldown = 10,
 			projectile_creation_distance = 1.39375,
 			projectile_center = {0, -0.0875}, -- same as gun_turret_attack shift
 			shell_particle =
@@ -807,7 +810,7 @@ local combatRobots =
 				starting_frame_speed_deviation = 0.1
 			},
 			range = 12,
-			sound = sounds.gun_turret_gunshot,
+			sound = sounds.submachine_gunshot,
 			animation = {
                 layers = 
                 {

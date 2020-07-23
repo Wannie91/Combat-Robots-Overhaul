@@ -7,8 +7,9 @@ data:extend({
 		ingredients = 
 		{	
 			{ "steel-plate", 10 },
-			{ "copper-cable", 5 },
+			{ "copper-plate", 5 },
 			{ "iron-gear-wheel", 5},
+			{ "electronic-circuit", 5 },
 		},
 		result = "destroyer-unit-capsule"
 	},
@@ -19,7 +20,7 @@ data:extend({
 		energy_required = 8,
 		ingredients = 
 		{	
-			{ "piercing-rounds-magazine", 3 },
+			{ "firearm-magazine", 5 },
 			{ "electronic-circuit", 3 },
 			{ "iron-gear-wheel", 5},
 		},
