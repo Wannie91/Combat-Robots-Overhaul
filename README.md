@@ -3,7 +3,7 @@
 ## Version
 0.1.1
 
-##Description
+## Description
 This mod overhauls Factorio's vanilla combat robots to make them more useful by automating the fight against biters. 
 
 Destroyer Units will automatically attack every biter nest (and worms) that has been discovered by radar or by the player. 
@@ -18,7 +18,7 @@ To make the combat robots more accessible in the early game, each type is unlock
 
 Please let me know if you think the mod needs more balance. 
 
-##Available Settings
+## Available Settings
 Enable Vannila Robots = Play with the vanilla robots enabled
 Exclude List = Exclude Prototypes from automatically being defended by defender robots
 Sentry Radius = The Patrol area of sentry units (Default: 10 tiles)
