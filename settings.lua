@@ -7,30 +7,14 @@ data:extend({
     },
     {
         type = "string-setting",
-        name = "defense_exclude_list",
-        setting_type = "runtime-global",
-        default_value = "defender-unit,sentry-unit,destroyer-unit,rail",
-        allow_blank = true
+        name = "defence-exclude-list",
+        setting_type = "runtime-global", 
+        default_value = "defender-unit, sentry-unit, destroyer-unit, gun-turret, laser-turret, distractor, defender, destroyer",
+        allow_blank = true,
     },
     {
-        type = "int-setting", 
-        name = "time-before-attack",
-        setting_type = "runtime-global",
-        default_value = 10,
-        minimum_value = 1,
-        maximum_value = 60
-    },
-    {
-        type = "double-setting",
-        name = "defender-distance",
-        setting_type = "runtime-per-user",
-        default_value = 3,
-        minimum_value = 0,
-        maximum_value = 10
-    },
-    {
-        type = "double-setting",
-        name = "sentry-radius",
+        type = "double-setting", 
+        name = "sentry-radius", 
         setting_type = "runtime-global",
         default_value = 10,
         minimum_value = 1,
@@ -44,4 +28,21 @@ data:extend({
         minimum_value = 100,
         maximum_value = 5000,
     },
+    {
+        type = "double-setting",
+        name = "defender-distance",
+        setting_type = "runtime-per-user",
+        default_value = 3,
+        minimum_value = 0,
+        maximum_value = 10
+    },
+    {
+        type = "int-setting", 
+        name = "time-before-attack",
+        setting_type = "runtime-global",
+        default_value = 10,
+        minimum_value = 1,
+        maximum_value = 60
+    },
+
 })
