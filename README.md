@@ -1,14 +1,29 @@
 # Combat Robots Overhaul
-This mod overhauls Factorio's vanilla Combat Robots to make them more useful in the fight against biters. 
 
-Destroyer Units will automatically attack every biter nests (and worms) that have been discovered either by the player or by radar.
+## Version
+0.1.1
 
-Defender Units will either follow the player, or automatically defend the base in case of an enemy attack. (Behaviour controlled by Toggleable shortcut)
+##Description
+This mod overhauls Factorio's vanilla combat robots to make them more useful by automating the fight against biters. 
 
-Distractor Units have been renamed to Sentry Units and have more or less keept their old behaviour. They patrol the area where they have been thrown at and act as cheap mobile turrets.
+Destroyer Units will automatically attack every biter nest (and worms) that has been discovered by radar or by the player. 
 
-For balancing purposes, the recipes of the combat robots have been changed so that only one unit is spawned per capsule. Once thrown, the robots can't be reclaimed anymore. In return, they have a unlimited lifespan and can be repaired. 
+Defender Units will either follow the player, or automatically defend the base in case of a biter attack. (Toggleable)
 
-Furthermore, each group is limited to the players maximum combat robot following count seperatedly. To make the technology more accessible in the game, all the robots recipes are unlocked after researching combat robotics 1. Their recipes has also changed. 
+Distractor Units have been renamed to Sentry units to better describe their purpose. They partrol a small area where they have been thrown at and act as cheap mobile turrets. 
 
-However, since I'm not sure yet about these balances, please let me what you think or what I can change to make them more balanced.
+For balancing purposes, the recipes of combat robots have been changed. While the overhauled combat robots are cheaper than the vanilla ones, each capsule only spawns one of them. In return, the robots have a unlimited lifespan and can be repaired. The sentry unit can furthermore be mined to get the unit back. 
+
+To make the combat robots more accessible in the early game, each type is unlocked after researching the first tier of combat robotics. Each unit type is also limited seperatedly by the overall maximum robot follower count. 
+
+Please let me know if you think the mod needs more balance. 
+
+##Available Settings
+Enable Vannila Robots = Play with the vanilla robots enabled
+Exclude List = Exclude Prototypes from automatically being defended by defender robots
+Sentry Radius = The Patrol area of sentry units (Default: 10 tiles)
+Base Defender Radius = The maximum distance for defender Units to defend the base. (Default: 2500 tiles)
+Defender Distance = Social distancing of defender units while following the player (Default: 3 tiles)
+Time before Attack: How long destroyer units wait after being created until they start their attack (Default: 10 Seconds)
+
+
