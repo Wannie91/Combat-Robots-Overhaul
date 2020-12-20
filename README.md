@@ -29,6 +29,6 @@ Base Defender Radius = The maximum distance for defender Units to defend the bas
 
 Defender Distance = Social distancing of defender units while following the player (Default: 3 tiles)
 
-Time before Attack: How long destroyer units wait after being created until they start their attack (Default: 10 Seconds)
+Time before Attack = How long destroyer units wait after being created until they start their attack (Default: 10 Seconds)
 
 
