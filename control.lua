@@ -164,15 +164,10 @@ end
 
 local function addMemberToUnitGroup(entity, combatUnit)
 
-    if allowNewGroupMembers(combatUnit) then 
-        combatUnit.unitGroup.add_member(entity) 
-        combatUnit.members = combatUnit.members + 1
-        combatUnit.readyForAction = false
-        combatUnit.createdTick = game.tick
-    else
-        data.waitList[entity.unit_number] = { combatUnit = combatUnit, entity = entity }
-        entity.set_command({ type = defines.command.wander, radius = 25, ticks_to_wait  = 360, distraction = defines.distraction.by_anything })
-    end
+    combatUnit.unitGroup.add_member(entity) 
+    combatUnit.members = combatUnit.members + 1
+    combatUnit.readyForAction = false
+    combatUnit.createdTick = game.tick
 
 end
 
@@ -180,24 +175,26 @@ local function createdEntity(event)
 
     local entity = event.entity
     local player = game.players[entity.last_user.index]
+    local combatUnit = getCombatUnit(player, entity.name)
+
+    if not combatUnit then 
+        combatUnit = createCombatUnit(player, entity)
+    end
 
     if entity.name == modDefines.units.sentry then 
-        entity.set_command({ type = defines.command.wander, radius = settings.global["sentry-radius"].value, distraction = defines.distraction.by_anything })
-    else
-        local combatUnit = getCombatUnit(player, entity.name)
-
-        if not combatUnit then 
-            combatUnit = createCombatUnit(player, entity)
-        end
-
+        combatUnit.members = combatUnit.members + 1
+    elseif allowNewGroupMembers(combatUnit) then 
         addMemberToUnitGroup(entity, combatUnit)
+    else
+        data.waitList[entity.unit_number] = { combatUnit = combatUnit, entity = entity }
+        entity.set_command({ type = defines.command.wander, radius = 25, ticks_to_wait  = 360, distraction = defines.distraction.by_anything })
     end
 
 end
 
 local function removeCombatRobotFromGroup(event)
 
-    if event.unit.name ~= modDefines.units.defender or modDefines.units.destroyer then return end
+    if event.unit.name ~= modDefines.units.defender and event.unit.name ~= modDefines.units.destroyer then return end
 
     local group_number = event.group.group_number
     local combatUnit = data.combatUnits[group_number]
@@ -213,6 +210,16 @@ local function removeCombatRobotFromGroup(event)
         combatUnit.player.print({ "messages.unitgroup-destroyed", combatUnit.unitType, string.format("[gps= %d, %d]", combatUnit.unitGroup.position.x, combatUnit.unitGroup.position.y )})
         data.combatUnits[group_number] = nil 
     
+    end
+
+end
+
+local function entityDied(event)
+
+    local combatUnit = getCombatUnit(event.entity.last_user, event.entity.name)
+
+    if combatUnit then 
+        combatUnit.members = combatUnit.members - 1 
     end
 
 end
@@ -240,7 +247,7 @@ local function commandCompleted(event)
         if combatUnit and combatUnit.unitGroup.valid then 
 
             if allowNewGroupMembers(combatUnit) then 
-                combatUnit.unitGroup.add_member(entity)
+                addMemberToUnitGroup(entity, combatUnit)
                 data.waitList[event.unit_number] = nil 
             else
                 entity.set_command({ type = defines.command.wander, radius = 5, ticks_to_wait = 360, distraction = defines.distraction.by_anything })
@@ -357,6 +364,7 @@ script.on_event(defines.events.on_player_used_capsule, playerUsedCapsule)
 script.on_event(defines.events.script_raised_built, createdEntity, {{ filter = "name", name = modDefines.units.defender }, { filter = "name", name = modDefines.units.sentry }, { filter = "name", name = modDefines.units.destroyer }})
 script.on_event(defines.events.on_trigger_created_entity, createdEntity)
 script.on_event(defines.events.on_unit_removed_from_group, removeCombatRobotFromGroup)
+script.on_event(defines.events.on_entity_died, entityDied, { { filter = "name", name = modDefines.units.sentry } })
 
 script.on_event(defines.events.on_unit_group_finished_gathering, finishedGathering)
 script.on_event(defines.events.on_ai_command_completed, commandCompleted)
