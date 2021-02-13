@@ -25,6 +25,21 @@ local defines = {
         prefer_straight_paths = true 
     },
 
+    combatRobotFilter = {
+        {
+            filter = "name", 
+            name = "defender-unit"
+        }, 
+        { 
+            filter = "name", 
+            name = "sentry-unit",
+        }, 
+        { 
+            filter = "name", 
+            name = "destroyer-unit",
+        }
+    }
+
 }
 
 return defines
