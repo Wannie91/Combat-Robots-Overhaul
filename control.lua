@@ -214,6 +214,26 @@ local function removeCombatRobotFromGroup(event)
 
 end
 
+local function entityMined(event)
+
+    local combatUnit = getCombatUnit(event.entity.last_user, event.entity.name)
+    local player = game.players[event.player_index]
+
+    if combatUnit then 
+        combatUnit.members = combatUnit.members - 1
+
+        if combatUnit.members == 0 then 
+            
+            if event.entity.name == modDefines.units.defender then 
+                combatUnit.player.set_shortcut_available("toggle-defender", false)
+            end
+           -- combatUnit.player.print({ "messages.unitgroup-destroyed", combatUnit.unitType, string.format("[gps= %d, %d]", combatUnit.unitGroup.position.x, combatUnit.unitGroup.position.y )})
+            data.combatUnits[group_number] = nil 
+        end
+    end
+
+end
+
 local function entityDied(event)
 
     local combatUnit = getCombatUnit(event.entity.last_user, event.entity.name)
@@ -361,8 +381,10 @@ script.on_event(defines.events.on_chunk_charted, checkAreaForEnemyBases)
 script.on_event(defines.events.on_entity_destroyed, entityDestroyed)
 
 script.on_event(defines.events.on_player_used_capsule, playerUsedCapsule)
-script.on_event(defines.events.script_raised_built, createdEntity, {{ filter = "name", name = modDefines.units.defender }, { filter = "name", name = modDefines.units.sentry }, { filter = "name", name = modDefines.units.destroyer }})
+script.on_event(defines.events.script_raised_built, createdEntity, defines.combatRobotFilter)
 script.on_event(defines.events.on_trigger_created_entity, createdEntity)
+
+script.on_event(defines.events.on_player_mined_entity, entityMined, defines.combatRobotFilter )
 script.on_event(defines.events.on_unit_removed_from_group, removeCombatRobotFromGroup)
 script.on_event(defines.events.on_entity_died, entityDied, { { filter = "name", name = modDefines.units.sentry } })
 
