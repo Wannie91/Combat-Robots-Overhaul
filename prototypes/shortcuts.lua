@@ -15,28 +15,28 @@ data:extend({
         associated_control_input = "toggle-defender",
         toggleable = true,
         icon = {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/toogle-defender-x32.png",
+            filename = "__CombatRobotsOverhaul__/graphics/icons/toggle-defender-x32.png",
             flags = { "icon" },
             priority = "extra-high-no-scale",
             scale = 1,
             size = 32
         },
         small_icon = {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/toogle-defender-x24.png",
+            filename = "__CombatRobotsOverhaul__/graphics/icons/toggle-defender-x24.png",
             flags = { "icon" },
             priority = "extra-high-no-scale",
             scale = 1,
             size = 24
         },
         disabled_icon = {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/toogle-defender-x32-white.png",
+            filename = "__CombatRobotsOverhaul__/graphics/icons/toggle-defender-x32-white.png",
             flags = { "icon" },
             priority = "extra-high-no-scale",
             scale = 1,
             size = 32
         },
         disabled_small_icon = {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/toogle-defender-x24-white.png",
+            filename = "__CombatRobotsOverhaul__/graphics/icons/toggle-defender-x24-white.png",
             flags = { "icon" },
             priority = "extra-high-no-scale",
             scale = 1,
