@@ -8,7 +8,7 @@ This mod overhauls Factorio's vanilla combat robots to make them more useful by 
 
 Destroyer Units will automatically attack every biter nest (and worms) that have been discovered by radar or by the player. 
 
-Defender Units will either follow and portect the player, or automatically defend the base in case of a biter attack. (Toggleable)
+Defender Units will either follow and protect the player, or automatically defend the base in case of a biter attack. (Toggleable)
 
 Distractor Units have been renamed to Sentry units to better describe their purpose. They partrol a small area where they have been thrown at and act as cheap mobile turrets. 
 
