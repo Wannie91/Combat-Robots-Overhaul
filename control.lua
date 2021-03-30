@@ -66,7 +66,7 @@ end
 
 local function toggleDefenderFollow(event)
 
-    if event.prototype_name ~= "toggle-defender" and event.input_name ~= "keyboard-toggle-defender" then  return end
+    if event.prototype_name ~= "toggle-defender" and event.input_name ~= "keyboard-toggle-defender" then return end
     
     local player = game.players[event.player_index]
 
@@ -101,7 +101,7 @@ local function playerUsedCapsule(event)
 
     local item = event.item 
 
-    if item.name == modDefines.capsules.defender or modDefines.capsules.sentry or modDefines.capsules.destroyer then 
+    if item.name == modDefines.capsules.defender or item.name == modDefines.capsules.sentry or item.name == modDefines.capsules.destroyer then 
 
         local player = game.players[event.player_index]
         local unitType = modDefines.associations[item.name]
