@@ -183,6 +183,7 @@ local function createdEntity(event)
 
     if entity.name == modDefines.units.sentry then 
         combatUnit.members = combatUnit.members + 1
+        entity.set_command({ type = defines.command.wander, radius = settings.global["sentry-radius"].value, distraction = defines.distraction.by_anything })
     elseif allowNewGroupMembers(combatUnit) then 
         addMemberToUnitGroup(entity, combatUnit)
     else
@@ -228,7 +229,7 @@ local function entityMined(event)
                 combatUnit.player.set_shortcut_available("toggle-defender", false)
             end
            -- combatUnit.player.print({ "messages.unitgroup-destroyed", combatUnit.unitType, string.format("[gps= %d, %d]", combatUnit.unitGroup.position.x, combatUnit.unitGroup.position.y )})
-            data.combatUnits[group_number] = nil 
+            data.combatUnits[event.entity.unit_number] = nil 
         end
     end
 
@@ -356,7 +357,7 @@ local function onTick(event)
             if combatUnit.player.is_shortcut_toggled("toggle-defender") then
                 updateDefenderFollower(combatUnit.player, combatUnit.unitGroup)
             elseif not combatUnit.unitGroup.command then 
-                combatUnit.unitGroup.set_command({ type = defines.command.wander, radius = 15, distraction = defines.distraction_by_anything })
+                combatUnit.unitGroup.set_command({ type = defines.command.wander, radius = 15, distraction = defines.distraction.by_anything })
             end
         elseif combatUnit.unitType == modDefines.units.destroyer and combatUnit.readyForAction then 
             local waitTick = combatUnit.createdTick + ( settings.global["time-before-attack"].value * 60 )
