@@ -191,6 +191,10 @@ local function createdEntity(event)
         entity.set_command({ type = defines.command.wander, radius = 25, ticks_to_wait  = 360, distraction = defines.distraction.by_anything })
     end
 
+    if entity.name == modDefines.units.defender then 
+        player.set_shortcut_available("toggle-defender", true)
+    end
+
 end
 
 local function removeCombatRobotFromGroup(event)
@@ -324,7 +328,7 @@ local function defendBase(event)
                         end
                     end
 
-                    unitGroup.set_command({ type = defines.command.attack_area, destination = event.entity.position, radius = 50, distraction = defines.distraction.by_anything })   
+                    unitGroup.set_command({ type = defines.command.attack_area, destination = event.entity.position, radius = 50, distraction = defines.distraction.by_enemy })   
                 end
             end
         end
@@ -341,9 +345,12 @@ local function handleDestroyerUnit(unitGroup)
             local targetEntity = unitGroup.surface.get_closest(unitGroup.position, data.attackList) 
 
             if targetEntity and targetEntity.valid then 
-                unitGroup.set_command({ type = defines.command.attack_area, destination = targetEntity.position, radius = 30, distraction = defines.distraction.by_enemy })
+                unitGroup.set_command({ type = defines.command.attack_area, destination = targetEntity.position, radius = 30, distraction = defines.distraction.by_anything })
             end
         end
+
+        unitGroup.start_moving()
+
     elseif not unitGroup.command or unitGroup.command.type == 9 then
         unitGroup.set_command({ type = defines.command.wander, radius = 50, distraction = defines.distraction.by_enemy})
     end
@@ -357,7 +364,7 @@ local function onTick(event)
             if combatUnit.player.is_shortcut_toggled("toggle-defender") then
                 updateDefenderFollower(combatUnit.player, combatUnit.unitGroup)
             elseif not combatUnit.unitGroup.command then 
-                combatUnit.unitGroup.set_command({ type = defines.command.wander, radius = 15, distraction = defines.distraction.by_anything })
+                combatUnit.unitGroup.set_command({ type = defines.command.wander, radius = 15, distraction = defines.distraction.by_enemy })
             end
         elseif combatUnit.unitType == modDefines.units.destroyer and combatUnit.readyForAction then 
             local waitTick = combatUnit.createdTick + ( settings.global["time-before-attack"].value * 60 )
