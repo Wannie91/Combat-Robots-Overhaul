@@ -6,7 +6,7 @@ data:extend({
 		energy_required = 8,
 		ingredients = 
 		{	
-			{ "submachine-gun", 1 },
+			{ "firearm-magazine", 5 },
 			{ "electronic-circuit", 3 },
 			{ "iron-gear-wheel", 5},
 		},

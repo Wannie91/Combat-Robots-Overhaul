@@ -130,7 +130,7 @@ local combatRobots =
         icon = "__base__/graphics/icons/distractor.png",
         icon_size = 64, icon_mipmaps = 4,
         flags = { "placeable-player", "player-creation", "placeable-off-grid" },
-        minable = { mining_time = 0.5, result = "sentry-unit" },
+        minable = { mining_time = 0.5, result = "sentry-unit-capsule" },
         placeable_by = { item = "sentry-unit-capsule", count = 1 },   
         subgroup = "capsule",
         order = "e-b-b",
