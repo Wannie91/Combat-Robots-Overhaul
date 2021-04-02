@@ -19,7 +19,7 @@ local defines = {
     },
 
     pathfinding_flags = {
-        allow_paths_through_own_entities = true, 
+        allow_paths_through_own_entities = false, 
         cache = false, 
         no_break = true, 
         prefer_straight_paths = true 
