@@ -111,7 +111,7 @@ local combatRobotUnits =
         {
             sound = 
             {
-                filename = "__base__/sounds/fight/defender-robot-loop.ogg",
+                filename = "__base__/sound/fight/defender-robot-loop.ogg",
                 volume = 0.7
             },
             apparent_volume = 1,
@@ -343,8 +343,8 @@ local combatRobotUnits =
     },
 }
 
-data:extend(combatRobots)
+data:extend(combatRobotUnits)
 
-for _, combatRobot in pairs(combatRobots) do 
+for _, combatRobot in pairs(combatRobotUnits) do 
     animations.make_robot_particle(combatRobot)
 end
