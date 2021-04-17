@@ -345,7 +345,7 @@ local function handleDestroyerUnit(unitGroup)
             local targetEntity = unitGroup.surface.get_closest(unitGroup.position, data.attackList) 
 
             if targetEntity and targetEntity.valid then 
-                unitGroup.set_command({ type = defines.command.attack_area, destination = targetEntity.position, radius = 30, distraction = defines.distraction.by_anything })
+                unitGroup.set_command({ type = defines.command.attack_area, destination = targetEntity.position, radius = 30, distraction = defines.distraction.by_enemy })
             end
         end
 
@@ -389,10 +389,10 @@ script.on_event(defines.events.on_chunk_charted, checkAreaForEnemyBases)
 script.on_event(defines.events.on_entity_destroyed, entityDestroyed)
 
 script.on_event(defines.events.on_player_used_capsule, playerUsedCapsule)
-script.on_event(defines.events.script_raised_built, createdEntity, defines.combatRobotFilter)
+script.on_event(defines.events.script_raised_built, createdEntity, modDefines.combatRobotFilter)
 script.on_event(defines.events.on_trigger_created_entity, createdEntity)
 
-script.on_event(defines.events.on_player_mined_entity, entityMined, defines.combatRobotFilter )
+script.on_event(defines.events.on_player_mined_entity, entityMined, modDefines.combatRobotFilter )
 script.on_event(defines.events.on_unit_removed_from_group, removeCombatRobotFromGroup)
 script.on_event(defines.events.on_entity_died, entityDied, { { filter = "name", name = modDefines.units.sentry } })
 
