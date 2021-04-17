@@ -58,7 +58,7 @@ local combatRobotUnits =
             cooldown_deviation = 0.2,
             projectile_center = {0,1},
             projectile_creation_distance = 0.6,
-            range = 20,
+            range = 15,
             sound = sounds.defender_gunshots,
             ammo_type = 
             {
@@ -66,7 +66,7 @@ local combatRobotUnits =
                 action = 
                 {
                     type = "direct",
-                    action_delievery = 
+                    action_delivery = 
                     {
                         type = "instant",
                         source_effects = 
@@ -186,15 +186,13 @@ local combatRobotUnits =
                 category = "laser",
                 action =
                 {
+                    type = "direct",
+                    action_delivery = 
                     {
-                        type = "direct",
-                        action_delievery = 
-                        {
-                            type = "beam",
-                            beam = "laser-beam",
-                            max_length = 15,
-                            duration = 10,
-                        }
+                        type = "beam",
+                        beam = "laser-beam",
+                        max_length = 15,
+                        duration = 20,
                     }
                 } 
             },
