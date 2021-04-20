@@ -9,7 +9,7 @@ local combatRobotUnits =
         name = "defender-unit",
         icon = "__base__/graphics/icons/defender.png",
         icon_size = 64, icon_mipmaps = 4,
-        minabel = { mining_time = 0.5 },
+        minable = { mining_time = 0.5, result = "defender-unit-capsule"},
         placeable_by = {item = "defender-unit-capsule", count = 1},
         subgroup = "capsule",
         order = "e-b-a",
@@ -59,7 +59,7 @@ local combatRobotUnits =
             projectile_center = {0,1},
             projectile_creation_distance = 0.6,
             range = 15,
-            sound = sounds.defender_gunshots,
+            sound = sounds.defender_gunshot,
             ammo_type = 
             {
                 category = "bullet",
@@ -130,7 +130,7 @@ local combatRobotUnits =
         icon = "__base__/graphics/icons/distractor.png",
         icon_size = 64, icon_mipmaps = 4,
         flags = {"placeable-player", "player-creation", "placeable-off-grid"},
-        mineable = { minig_time = 0.5, result = "sentry-unit-capsule"},
+        minable = { mining_time = 0.5, result = "sentry-unit-capsule"},
         placeable_by = {item = "sentry-unit-capsule", count = 1},
         subgroup = "capsule",
         order = "e-b-b",
@@ -238,13 +238,13 @@ local combatRobotUnits =
         icon = "__base__/graphics/icons/destroyer.png",
         icon_size = 64, icon_mipmaps = 4,
         flags = {"placeable-player", "player-creation", "placeable-off-grid"},
-        mineable = { mining_time = 0.5},
+        minable = { mining_time = 0.5, result = "destroyer-unit-capsule"},
         placeable_by = {item = "destroyer-unit-capsule", count = 1},
         subgroup = "capsule",
         order = "e-b-c",
 
         max_health = 120,
-        vision_distance = 45,
+        vision_distance = 20,
         radar_range = 1,
         movement_speed = 0.2,
 
@@ -256,7 +256,7 @@ local combatRobotUnits =
         max_pursue_distance = 50,
         ai_settings = { do_separation = false },
 
-        collision_box = { {0, 0}, { 0, 0} },
+        -- collision_box = { {0, 0}, { 0, 0} },
         selection_box = { {-0.5, -0.5}, {0.5, 0.5} },
         hit_visualization_box =  { {-0.1, -1.4}, {0.1, -1.3} },
         friendly_map_color = { 0, 128, 0},
@@ -285,7 +285,7 @@ local combatRobotUnits =
             ammo_category = "beam",
             cooldown = 20,
             cooldown_deviation = 0.2,
-            range = 15,
+            range = 20,
             sound = make_laser_sounds(),
             ammo_type = 
             {
@@ -297,7 +297,7 @@ local combatRobotUnits =
                     {
                         type = "beam",
                         beam = "electric-beam",
-                        max_length = 15,
+                        max_length = 20,
                         duration = 20,
                         source_offset = { 0.15, -0.5 }
                     }
