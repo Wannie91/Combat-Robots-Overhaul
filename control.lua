@@ -345,7 +345,7 @@ local function handleDestroyerUnit(unitGroup)
             local targetEntity = unitGroup.surface.get_closest(unitGroup.position, data.attackList) 
 
             if targetEntity and targetEntity.valid then 
-                unitGroup.set_command({ type = defines.command.attack_area, destination = targetEntity.position, radius = 30, distraction = defines.distraction.by_enemy })
+                unitGroup.set_command({ type = defines.command.attack_area, destination = targetEntity.position, radius = 20, distraction = defines.distraction.by_enemy })
             end
         end
 

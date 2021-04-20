@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.0.5
+Date: 20.04.2021
+Changes:
+	- Changed the vision distance & attack range of destroyer unit.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+Date: 19.04.2021
+Changes:
+	- Fixed crash when mining units.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 18.04.2021
+Changes:
+	- Fixed missing unit sounds.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 17.04.2021
+Changes: 
+	- Fixed issue with defender and sentry units not attacking
+	- Fixed issue with event filter not working properly 
+---------------------------------------------------------------------------------------------------
+VersioN: 1.0.1
+Date: 16.04.2021
+Changes:
+	- Initial Release
