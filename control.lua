@@ -76,7 +76,7 @@ local function toggleDefenderFollow(event)
         player.set_shortcut_toggled("toggle-defender", true)
     end
 
-    end
+end
 
 local function checkAreaForEnemyBases(event)
 
@@ -173,6 +173,8 @@ end
 
 local function createdEntity(event)
 
+    if event.entity.name ~= modDefines.units.defender and event.entity.name ~= modDefines.units.sentry and event.entity.name ~= modDefines.units.destroyer then return end
+
     local entity = event.entity
     local player = game.players[entity.last_user.index]
     local combatUnit = getCombatUnit(player, entity.name)
@@ -228,12 +230,14 @@ local function entityMined(event)
         combatUnit.members = combatUnit.members - 1
 
         if combatUnit.members == 0 then 
+
+            local group_number = combatUnit.unitGroup.group_number
             
             if event.entity.name == modDefines.units.defender then 
                 combatUnit.player.set_shortcut_available("toggle-defender", false)
             end
            -- combatUnit.player.print({ "messages.unitgroup-destroyed", combatUnit.unitType, string.format("[gps= %d, %d]", combatUnit.unitGroup.position.x, combatUnit.unitGroup.position.y )})
-            data.combatUnits[event.entity.unit_number] = nil 
+            data.combatUnits[group_number] = nil 
         end
     end
 
@@ -292,6 +296,8 @@ local function updateDefenderFollower(player, unitGroup)
 
     local defender_distance = settings.get_player_settings(player.index)["defender-distance"].value 
 
+    if unitGroup.command then return end
+
     unitGroup.set_command({ type = defines.command.go_to_location, destination_entity = player.character or nil, destination = (not player.character and player.position) or nil, radius = defender_distance - 8, distraction = defines.distraction.by_anything, pathfind_flags = modDefines.pathfinding_flags })
 
     --adjust robot speed to match player inside or out a vehicle
@@ -309,11 +315,11 @@ end
 
 local function defendBase(event)
 
-    if event.force.name == "enemy" and not event.entity.name == "player" then 
+    if event.force.name == "enemy" then 
 
         for _, combatUnit in pairs(data.combatUnits) do 
 
-            if combatUnit.unitType == modDefines.units.defender and not combatUnit.player.is_shortcut_toggled("toggle-defender") and combatUnit.readyForAction then
+            if combatUnit.unitType == modDefines.units.defender and not combatUnit.player.is_shortcut_toggled("toggle-defender") and combatUnit.readyForAction and not data.defenceExcludeList[event.entity.name] then
 
                 local unitGroup = combatUnit.unitGroup
                 local targetDistance = util.getDistance(event.entity.position, unitGroup.position)
@@ -357,14 +363,17 @@ local function handleDestroyerUnit(unitGroup)
 
 end
 
-local function onTick(event)
+local function onTick()
 
     for _, combatUnit in pairs (data.combatUnits) do 
         if combatUnit.unitType == modDefines.units.defender and combatUnit.readyForAction then
-            if combatUnit.player.is_shortcut_toggled("toggle-defender") then
-                updateDefenderFollower(combatUnit.player, combatUnit.unitGroup)
-            elseif not combatUnit.unitGroup.command then 
-                combatUnit.unitGroup.set_command({ type = defines.command.wander, radius = 15, distraction = defines.distraction.by_enemy })
+            if combatUnit.unitGroup.valid then 
+                if combatUnit.player.is_shortcut_toggled("toggle-defender") then
+                    updateDefenderFollower(combatUnit.player, combatUnit.unitGroup)
+                elseif not combatUnit.unitGroup.command then 
+                    combatUnit.unitGroup.set_command({ type = defines.command.wander, radius = 15, distraction = defines.distraction.by_enemy })
+                    combatUnit.unitGroup.start_moving()
+                end
             end
         elseif combatUnit.unitType == modDefines.units.destroyer and combatUnit.readyForAction then 
             local waitTick = combatUnit.createdTick + ( settings.global["time-before-attack"].value * 60 )
@@ -400,5 +409,7 @@ script.on_event(defines.events.on_unit_group_finished_gathering, finishedGatheri
 script.on_event(defines.events.on_ai_command_completed, commandCompleted)
 
 script.on_event(defines.events.on_entity_damaged, defendBase)
+
+
 
 script.on_nth_tick(60, onTick)
