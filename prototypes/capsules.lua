@@ -172,5 +172,4 @@ data:extend({
         order = "f[destroyer-unit-capsule]",
         stack_size = 100
     },
-
 })
