@@ -22,7 +22,7 @@ local defines = {
         allow_paths_through_own_entities = false, 
         cache = false, 
         no_break = true, 
-        prefer_straight_paths = true 
+        prefer_straight_paths = true,
     },
 
     combatRobotFilter = {
@@ -38,7 +38,7 @@ local defines = {
             filter = "name", 
             name = "destroyer-unit",
         }
-    }
+    },
 
 }
 

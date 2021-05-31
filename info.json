@@ -1,10 +1,13 @@
 {
     "name": "CombatRobotsOverhaul",
-    "version": "1.0.5",
+    "version": "1.0.7",
     "author": "Wannie",
     "title": "Combat Robots Overhaul",
     "factorio_version": "1.1",
-    "dependencies": ["base >= 1.1"],
+    "dependencies": [
+        "base >= 1.1",
+        "!space-exploration"                    
+    ],
     "homepage": "www.mods.factorio.com/mod/CombatRobotOverhaul",
     "description": "Overhaul of Factorio's Combat Robots to make them more useful. Destroyer Robots seek and destroy discovered biter nests. Defender robots either defend the player or the base (Togglable). Distractor Robots have been renamed to Sentry Bots and defend the area where they have been thrown at."
 }
