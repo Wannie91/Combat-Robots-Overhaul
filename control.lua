@@ -179,7 +179,7 @@ local function createdEntity(event)
     local player = game.players[entity.last_user.index]
     local combatUnit = getCombatUnit(player, entity.name)
 
-    if not combatUnit then 
+    if not combatUnit or not combatUnit.valid then 
         combatUnit = createCombatUnit(player, entity)
     end
 
@@ -303,7 +303,7 @@ local function updateDefenderFollower(player, unitGroup)
     --adjust robot speed to match player inside or out a vehicle
     for _, member in pairs(unitGroup.members) do 
         if player.driving then 
-            member.speed = player.vehicle.speed + 0.1
+            member.speed = math.abs(player.vehicle.speed) + 0.1
         elseif player.character then
             member.speed = player.character.character_running_speed + 0.2 
         end
