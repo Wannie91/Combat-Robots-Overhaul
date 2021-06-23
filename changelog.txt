@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.8
+Date: ????
+  Changes:
+---------------------------------------------------------------------------------------------------
+Version: 1.0.8 
+Date: 23.06.2021
+Changes:
+  - Removed Destroyer Capsule from prequiste for max-follower-update-5  
+  - Fixed Crash when moving backwards in crash
+  - Fixed Crash when deploying new units when previous group was pdestroyed
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.0.7 
 Date: 29.04.2021
 Changes:

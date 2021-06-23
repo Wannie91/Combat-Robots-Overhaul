@@ -219,7 +219,7 @@ local animations =
 
     defender_unit = 
     {
-        base_animation = 
+        idle = 
         {
             filename = "__base__/graphics/entity/defender-robot/defender-robot.png",
             priority = "high",
@@ -266,7 +266,7 @@ local animations =
                 scale = 0.5
             }
         },
-        shadow_base_animation = 
+        shadow_idle = 
         {
             filename = "__base__/graphics/entity/defender-robot/defender-robot-shadow.png",
             priority = "high",
@@ -291,7 +291,7 @@ local animations =
                 draw_as_shadow = true
             }
         },	
-        animation = 
+        in_motion = 
         {
             filename = "__base__/graphics/entity/defender-robot/defender-robot.png",
             priority = "high",
@@ -346,7 +346,7 @@ local animations =
                 scale = 0.5
             }
         },
-        shadow_animation = 
+        shadow_in_motion = 
         {
             filename = "__base__/graphics/entity/defender-robot/defender-robot.png",
             priority = "high",
@@ -400,7 +400,7 @@ local animations =
                 y = 21,
                 scale = 0.5
             }
-        },
+        }
     },
 
     sentry_unit = 
@@ -558,8 +558,8 @@ local animations =
     make_robot_particle = function(prototype)
 
         local particle_name = prototype.name.."-dying-particle"
-        local animation = adjust_animation(prototype.run_animation or prototype.graphics_set.base_animation)
-        local shadow_animation = adjust_shadow(prototype.run_animation or prototype.graphics_set.shadow_base_animation)
+        local animation = adjust_animation(prototype.run_animation)
+        local shadow_animation = adjust_shadow(prototype.run_animation)
         local unit_name = prototype.name:gsub( "-unit", "")
         
         if unit_name:find("sentry") then

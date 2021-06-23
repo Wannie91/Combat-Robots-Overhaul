@@ -14,6 +14,10 @@ if not settings.startup["enable-vanilla-combatrobots"].value then
     data.raw["technology"]["distractor"].enabled = false
     data.raw["technology"]["destroyer"].enabled = false
 
+    data.raw["technology"]["follower-robot-count-5"].prerequisites = nil
+
+    -- data.raw["technology"]["follower-robot-count-1"].enabled = true
+
     data.raw["technology"]["defender"].effects[1] = nil
     data.raw["technology"]["distractor"].effects[1] = nil
     data.raw["technology"]["destroyer"].effects[2] = nil
