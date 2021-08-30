@@ -179,7 +179,7 @@ local function createdEntity(event)
     local player = game.players[entity.last_user.index]
     local combatUnit = getCombatUnit(player, entity.name)
 
-    if not combatUnit or not combatUnit.valid then 
+    if not combatUnit or not combatUnit.unitGroup.valid then 
         combatUnit = createCombatUnit(player, entity)
     end
 
@@ -226,7 +226,7 @@ local function entityMined(event)
     local combatUnit = getCombatUnit(event.entity.last_user, event.entity.name)
     local player = game.players[event.player_index]
 
-    if combatUnit then 
+    if combatUnit and combatUnit.unitGroup.valid then 
         combatUnit.members = combatUnit.members - 1
 
         if combatUnit.members == 0 then 
@@ -296,7 +296,7 @@ local function updateDefenderFollower(player, unitGroup)
 
     local defender_distance = settings.get_player_settings(player.index)["defender-distance"].value 
 
-    if unitGroup.command then return end
+    if unitGroup.command and unitGroup.command.type ~= 6 then return end
 
     unitGroup.set_command({ type = defines.command.go_to_location, destination_entity = player.character or nil, destination = (not player.character and player.position) or nil, radius = defender_distance - 8, distraction = defines.distraction.by_anything, pathfind_flags = modDefines.pathfinding_flags })
 
