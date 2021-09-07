@@ -35,7 +35,7 @@ local on_init = function()
         game.forces["player"].recipes["destroyer-unit"].enabled = true
     end
 
-    util.create_exclude_list(data.defenceExcludeList)
+    data.defenceExcludeList = util.create_exclude_list(data.defenceExcludeList)
 
 end
 
@@ -46,24 +46,24 @@ local on_load = function()
     global.combatRobotsOverhaulData = data 
 
     for _, defenderGroup in pairs(data.defenderGroups) do 
-        setmetatable(defenderGroup, DefenderGroup.metatable)
+        setmetatable(defenderGroup, {__index = DefenderGroup})
     end
 
     for _, sentryGroup in pairs(data.sentryGroups) do 
-        setmetatable(sentryGroup, SentryGroup.metatable)
+        setmetatable(sentryGroup, {__index = SentryGroup})
     end
 
     for _, destroyerGroup in pairs(data.destroyerGroups) do 
-        setmetatable(destroyerGroup, DestroyerGroup.metatable)
+        setmetatable(destroyerGroup, {__index = DestroyerGroup})
     end
 
 end
 
 local modsettings_changed = function(event) 
 
-    if event.setting ~= "exclude-list" then return end
+    if event.setting ~= "defence-exclude-list" then return end
 
-    util.create_exclude_list()
+    data.defenceExcludeList = util.create_exclude_list(data.defenceExcludeList)
 
 end
 
@@ -193,15 +193,9 @@ end
 
 local defend_base = function(event) 
 
-    local attackingForce = event.force 
-    local defendingForce = event.entity.force 
-    local attackedEntity = event.entity
-
-    if not (attackingForce == defendingForce or attackingForce.name == "neutral" or defendingForce.get_cease_fire(attackingForce)) and not data.defenceExcludeList[attackedEntity.name] then 
+    if event.force.name == "enemy" and event.entity.has_flag("player-creation") and not data.defenceExcludeList[event.entity.name] then 
         for player_index, defenderGroup in pairs(data.defenderGroups) do
-            if not defenderGroup.player.is_shortcut_toggled("defend-player") and attackedEntity.surface.index == defenderGroup.surface.index then 
-                defenderGroup:defend_base(attackedEntity)
-            end
+            defenderGroup:defend_base(event.entity)
         end
     end
 
