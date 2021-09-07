@@ -29,9 +29,11 @@ util.create_exclude_list = function(defenceExcludeList)
     --reset list
     defenceExcludeList = {}
 
-    for entry in string.gmatch(settings.global["defence-exclude-list"].value, "[^.]+") do 
+    for entry in string.gmatch(settings.global["defence-exclude-list"].value, "[^,]+") do 
         defenceExcludeList[entry] = true 
     end
+
+    return defenceExcludeList
 
 end
 
