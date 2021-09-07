@@ -1,7 +1,16 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.0.8
-Date: ????
+Version: 2.0.1
+Date: 07.09.2021
   Changes:
+  - Changed Defender Units from Type "Unit" to "Spider Vehicle"
+  - Overhauled the entire code base
+  - Added Surface filters to targetList as well as Unit Groups (This should make it compatible with mods who change the surface"
+  - Added Compability Patch for "Industrial Revolution 2" and "Un-Minable Bots"
+---------------------------------------------------------------------------------------------------
+Version: 1.0.9
+Date: 30.08.2021
+  Changes:
+  - Fixed Issue with invalid unitgroup on various occasions
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.8 
 Date: 23.06.2021
