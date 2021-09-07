@@ -32,7 +32,7 @@ local defender_unit =
     icon_size = 64, 
     icon_mipmaps = 4,
     flags = {"placeable-player", "player-creation", "placeable-off-grid"},
-    mineable = {mineable_time = 0.5, result = "defender-unit-capsule"},
+    minable = {mining_time = 0.5, result = "defender-unit-capsule"},
     placeable_by = {item = "defender-unit-capsule", count = 1},
     subgroup = "capsule",
     order = "e-b-a",
