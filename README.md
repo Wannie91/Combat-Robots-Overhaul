@@ -1,7 +1,7 @@
 # Combat Robots Overhaul
 
 ## Version
-1.0.0
+2.0.0
 
 ## Description
 This mod aims to overhaul the behaviour of Factorio's vanilla combat robots to make them more useful. 
@@ -28,6 +28,3 @@ Base Defender Radius = The maximum distance for defender Units to defend the bas
 Defender Distance = Social distancing of defender units while following the player (Default: 3 tiles)
 
 Time before Attack = How long destroyer units wait after being created until they start their attack (Default: 10 Seconds)
-
-## Known Issues
-The mod uses the vanilla unit group mechanics. Because of this, they sometimes behave very weirdly. I'm currently working on version 2.0 of the mod where I try to fix this behaviour. (Either by scripting my own group behaviour or by replacing the unit-type with spider vehicle)
