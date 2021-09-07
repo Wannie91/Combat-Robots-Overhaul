@@ -34,13 +34,3 @@ modDefines.eventFilters = {
 }
 
 return modDefines
-
-
--- local pathfindingFlags = {
---     allow_paths_through_own_entities = false,
---     cache = false,
---     no_break = true,
---     prefer_straight_paths = true,
--- }
-
--- return modDefines, modEventFilters, pathfindingFlags

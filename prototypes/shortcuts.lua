@@ -1,43 +1,47 @@
 data:extend({
     {
         type = "custom-input",
-        name = "keyboard-toggle-defender",
-        key_sequence = "CONTROL + SHIFT + D",
+        name = "defend-player",
+        key_sequence = "CONTROL + SHIFT + d",
         consuming = "game-only",
         action = "lua"
     },
     {
         type = "shortcut",
-        name = "toggle-defender", 
-        action = "lua", 
+        name = "defend-player",
+        action = "lua",
         order = "h[combatRobot]",
         technology_to_unlock = "defender",
-        associated_control_input = "toggle-defender",
+        associated_control_input = "defend-player",
         toggleable = true,
-        icon = {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/toggle-defender-x32.png",
-            flags = { "icon" },
+        icon = 
+        {
+            filename = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x32.png",
+            flags = {"icon"},
             priority = "extra-high-no-scale",
             scale = 1,
             size = 32
         },
-        small_icon = {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/toggle-defender-x24.png",
-            flags = { "icon" },
+        small_icon = 
+        {
+            filename = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x24.png",
+            flags = {"icon"},
             priority = "extra-high-no-scale",
             scale = 1,
-            size = 24
+            size = 24,
         },
-        disabled_icon = {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/toggle-defender-x32-white.png",
-            flags = { "icon" },
+        disabled_icon = 
+        {
+            filename = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x32-white.png",
+            flags = {"icon"},
             priority = "extra-high-no-scale",
             scale = 1,
-            size = 32
+            size = 32,
         },
-        disabled_small_icon = {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/toggle-defender-x24-white.png",
-            flags = { "icon" },
+        disabled_small_icon = 
+        {
+            filename = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x24-white.png",
+            flags = {"icon"},
             priority = "extra-high-no-scale",
             scale = 1,
             size = 24

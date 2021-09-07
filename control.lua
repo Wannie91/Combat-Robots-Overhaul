@@ -1,39 +1,33 @@
-local util = require("util/util")
-local modDefines = require("util/defines")
+local util = require("scripts/util")
+local modDefines = require("scripts/defines")
+local DefenderGroup = require("scripts/defendergroup")
+local DestroyerGroup = require("scripts/destroyergroup")
+local SentryGroup = require("scripts/sentrygroup")
 
-local combatUnitTemplate = {
-    player = true,
-    unitType = true,
-    members = 0,
-    surface = true, 
-    unitGroup = true,
-    readyForAction = false,
-    createdTick = 0,
-}
-
-local data = {
-    combatUnits = {},
-    attackList = {},
-    defendList = {},
-    waitList = {},
+local data = 
+{
+    defenderGroups = {},
+    sentryGroups = {},
+    destroyerGroups = {},
+    targetList = {},
     defenceExcludeList = {},
 }
 
-local function getCombatUnit(player, unitType)
-    
-    for _, combatUnit in pairs(data.combatUnits) do 
-        if combatUnit.player == player and combatUnit.unitType == unitType then 
-            return combatUnit
-        end
+local get_combatGroup = function(type, player_index, surface_index) 
+
+    if type == modDefines.units.defender then 
+        return util.get_group(data.defenderGroups, player_index, surface_index)
+    elseif type == modDefines.units.sentry then 
+        return util.get_group(data.sentryGroups, player_index, surface_index) 
+    elseif type == modDefines.units.destroyer then 
+        return util.get_group(data.destroyerGroups, player_index, surface_index)
     end
 
-    return nil
-
 end
+    
+local on_init = function() 
 
-local function init()
-
-    global.combatRobotsOverhaulData = global.combatRobotsOverhaulData or data 
+    global.combatRobotsOverhaulData = global.combatRobotsOverhaulData or data
 
     if game.forces["player"].technologies["defender"].researched then 
         game.forces["player"].recipes["defender-unit"].enabled = true
@@ -41,375 +35,216 @@ local function init()
         game.forces["player"].recipes["destroyer-unit"].enabled = true
     end
 
-    util.createDefenceExcludeList(data.defenceExcludeList)
+    util.create_exclude_list(data.defenceExcludeList)
 
 end
 
-local function load()
+local on_load = function()
 
-    data = global.combatRobotsOverhaulData or data 
-    global.combatRobotsOverhaulData = data
+    --copy data to or from global when game is saved / loaded
+    data = global.combatRobotsOverhaulData or data
+    global.combatRobotsOverhaulData = data 
+
+    for _, defenderGroup in pairs(data.defenderGroups) do 
+        setmetatable(defenderGroup, DefenderGroup.metatable)
+    end
+
+    for _, sentryGroup in pairs(data.sentryGroups) do 
+        setmetatable(sentryGroup, SentryGroup.metatable)
+    end
+
+    for _, destroyerGroup in pairs(data.destroyerGroups) do 
+        setmetatable(destroyerGroup, DestroyerGroup.metatable)
+    end
 
 end
 
-local function modSettingsChanged(event)
+local modsettings_changed = function(event) 
 
     if event.setting ~= "exclude-list" then return end
 
-    createDefenceExcludeList(data.defenceExcludeList)
+    util.create_exclude_list()
 
 end
 
-local function playerJoined()
+local toggle_defender_follow = function(event)
+
+    local player = game.get_player(event.player_index)
+    local input = event.prototype_name or event.input_name
+
+    if input ~= "defend-player" then return end 
+
+    player.set_shortcut_toggled(input, not player.is_shortcut_toggled(input))
 
 end
 
-local function toggleDefenderFollow(event)
+local check_area_for_enemy_bases = function(event)
 
-    if event.prototype_name ~= "toggle-defender" and event.input_name ~= "keyboard-toggle-defender" then return end
-    
-    local player = game.players[event.player_index]
-
-    if player.is_shortcut_toggled("toggle-defender") then     
-        player.set_shortcut_toggled("toggle-defender", false)
-    else
-        player.set_shortcut_toggled("toggle-defender", true)
+    if not data.targetList[event.surface_index] then 
+        data.targetList[event.surface_index] = {}
     end
 
-end
-
-local function checkAreaForEnemyBases(event)
-
-    for _, entity in pairs(game.surfaces[event.surface_index].find_entities_filtered({ area = event.area, force = "enemy", type = { "unit-spawner", "turret" }})) do 
-        if not util.tableContainsValue(data.attackList, entity.unit_number) and entity.active then 
-            data.attackList[entity.unit_number] = entity
-            script.register_on_entity_destroyed(entity)
+    for _, entity in pairs(game.get_surface(event.surface_index).find_entities_filtered({area = event.area, force = "enemy", type  = {"unit-spawner", "turret"}})) do 
+        if not util.table_contains_value(data.targetList[event.surface_index], entity.unit_number) and entity.active then 
+            data.targetList[event.surface_index][entity.unit_number] = entity
         end
     end
 
 end
 
-local function entityDestroyed(event)
+local entity_died = function(event)
 
-    if util.tableContainsValue(data.attackList, event.unit_number) then
-        data.attackList[event.unit_number] = nil
+    local entity = event.entity
+    if entity.force.name == "enemy" and (entity.type == "unit-spawner" or entity.type == "turret") then 
+        if util.table_contains_value(data.targetList[entity.surface.index], entity.unit_number) then  
+            data.targetList[entity.surface.index][entity.unit_number] = nil 
+        end
+    elseif entity.force.name == "player" and (entity.name == modDefines.units.defender or entity.name == modDefines.units.sentry or entity.name == modDefines.units.destroyer) then 
+        local combatGroup = get_combatGroup(entity.name, entity.last_user.index, entity.surface.index)
+
+        if combatGroup then 
+            combatGroup:remove_member(entity)
+        end
     end
 
 end
 
-local function playerUsedCapsule(event)
+local entity_mined = function(event)
+
+    local entity = event.entity 
+    local combatGroup = get_combatGroup(entity.name, entity.last_user.index, entity.surface.index)
+
+    if combatGroup then 
+        combatGroup:remove_member(entity)
+    end
+
+end
+
+local remote_used = function(event)
+
+    if event.vehicle.name == modDefines.units.defender then 
+        event.vehicle.follow_target = nil
+        event.vehicle.autopilot_destination = nil    
+    end
+
+end
+
+local player_used_capsule = function(event) 
 
     local item = event.item 
 
-    if item.name == modDefines.capsules.defender or item.name == modDefines.capsules.sentry or item.name == modDefines.capsules.destroyer then 
+    if (item.name == modDefines.capsules.defender) or (item.name == modDefines.capsules.sentry) or (item.name == modDefines.capsules.destroyer) then 
 
-        local player = game.players[event.player_index]
+        local player = game.get_player(event.player_index)
         local unitType = modDefines.associations[item.name]
-        local combatUnit = getCombatUnit(player, unitType)
+        local combatGroup = get_combatGroup(unitType, player.index, player.surface.index) 
 
-        if not combatUnit or combatUnit.members < game.forces.player.maximum_following_robot_count then
+        if not combatGroup or combatGroup:get_member_count() < game.forces.player.maximum_following_robot_count then 
             if player.character then 
-                player.surface.create_entity{ name = item.name, player = player, position = player.position, target = event.position, force = player.force, source = player.character, speed = 0.3, max_range = 25 }
+                player.surface.create_entity{name = item.name, player = player, position = player.position, target = event.position, force = player.force, source = player.character, speed = 0.3, max_range = 25}
             else
-                player.surface.create_entity{ name = unitType, player = player, position = event.position, force = player.force, raise_built = true }
+                player.surface.create_entity{name = unitType, player = player, position = event.position, force = player.force, raise_built = true}
             end
         else
-            player.create_local_flying_text{ text = { "messages.max_type_reached", unitType}, create_at_cursor = true }
-            player.insert{ name = item.name, count = 1 }
+            player.create_local_flying_text{text = {"messages.max-type-reached", unitType}, create_at_cursor = true}
+            player.insert{name = item.name, count = 1}
         end
     end
 
 end
 
-local function createCombatUnit(player, entity) 
+local created_entity = function(event) 
 
-    local newCombatUnit = util.shallowcopy(combatUnitTemplate)
-
-    newCombatUnit.player = player
-    newCombatUnit.unitType = entity.name
-    newCombatUnit.surface = entity.surface
-    newCombatUnit.unitGroup = entity.surface.create_unit_group({ position = entity.position, force = entity.force })
-
-    local group_number = newCombatUnit.unitGroup.group_number
-    table.insert(data.combatUnits, group_number, newCombatUnit)
-
-    return data.combatUnits[group_number]
-    
-end
-
-local function allowNewGroupMembers(combatUnit) 
-
-    local state = combatUnit.unitGroup.state 
-
-    if state == defines.group_state.gathering or state == defines.group_state.finished then 
-        return true
-    elseif state == defines.group_state.moving then 
-
-        -- if defender group is moving (defending base) do not add unit 
-        if combatUnit.unitType == modDefines.units.defender and not combatUnit.player.is_shortcut_toggled("toggle-defender") and combatUnit.unitGroup.command and combatUnit.unitGroup.command.type == defines.command.attack_area then 
-            return false
-        else
-            -- combatUnit.unitGroup.set_command({ type = defines.command.stop, distraction = defines.distraction.by_enemy })
-            combatUnit.unitGroup.set_command({ type = defines.command.wander, radius = 10, distraction = defines.distraction.by_enemy })
-            return true
-        end
-
-    elseif state == defines.group_state.attacking_distraction or state == defines.group_state.attacking_target then 
-        return false
-    elseif combatUnit.unitGroup.command and combatUnit.unitGroup.command.type == defines.command.wander then 
-        return true
-    end
-
-end
-
-local function addMemberToUnitGroup(entity, combatUnit)
-
-    combatUnit.unitGroup.add_member(entity) 
-    combatUnit.members = combatUnit.members + 1
-    combatUnit.readyForAction = false
-    combatUnit.createdTick = game.tick
-
-end
-
-local function createdEntity(event)
-
-    if event.entity.name ~= modDefines.units.defender and event.entity.name ~= modDefines.units.sentry and event.entity.name ~= modDefines.units.destroyer then return end
+    if event.entity.name ~= modDefines.units.defender and event.entity.name ~= modDefines.units.sentry and event.entity.name ~= modDefines.units.destroyer then return end 
 
     local entity = event.entity
-    local player = game.players[entity.last_user.index]
-    local combatUnit = getCombatUnit(player, entity.name)
+    local player = game.get_player(event.entity.last_user.index)
+    local combatGroup = get_combatGroup(entity.name, player.index, entity.surface.index)
 
-    if not combatUnit or not combatUnit.unitGroup.valid then 
-        combatUnit = createCombatUnit(player, entity)
+    if not combatGroup then 
+        if entity.name == modDefines.units.defender then 
+            combatGroup = DefenderGroup:new(player)
+            table.insert(data.defenderGroups, combatGroup)
+            -- data.defenderGroups[player.index] = combatGroup
+        elseif entity.name == modDefines.units.sentry then 
+            combatGroup = SentryGroup:new(player)
+            table.insert(data.sentryGroups, combatGroup)
+            -- data.sentryGroups[player.index] = combatGroup
+        elseif entity.name == modDefines.units.destroyer then 
+            combatGroup = DestroyerGroup:new(player)
+            table.insert(data.destroyerGroups, combatGroup)
+            -- data.destroyerGroups[player.index] = combatGroup
+        end
     end
 
-    if entity.name == modDefines.units.sentry then 
-        combatUnit.members = combatUnit.members + 1
-        entity.set_command({ type = defines.command.wander, radius = settings.global["sentry-radius"].value, distraction = defines.distraction.by_anything })
-    elseif allowNewGroupMembers(combatUnit) then 
-        addMemberToUnitGroup(entity, combatUnit)
-    else
-        data.waitList[entity.unit_number] = { combatUnit = combatUnit, entity = entity }
-        entity.set_command({ type = defines.command.wander, radius = 25, ticks_to_wait  = 360, distraction = defines.distraction.by_anything })
-    end
+    combatGroup:add_member(entity)
 
-    if entity.name == modDefines.units.defender then 
-        player.set_shortcut_available("toggle-defender", true)
+end
+
+local player_changed_surface = function(event) 
+
+    local combatGroup = get_combatGroup(modDefines.units.defender, event.player_index, event.surface_index)
+
+    if combatGroup then 
+        combatGroup:stop_following_player()
+    end 
+
+end
+
+local defend_base = function(event) 
+
+    local attackingForce = event.force 
+    local defendingForce = event.entity.force 
+    local attackedEntity = event.entity
+
+    if not (attackingForce == defendingForce or attackingForce.name == "neutral" or defendingForce.get_cease_fire(attackingForce)) and not data.defenceExcludeList[attackedEntity.name] then 
+        for player_index, defenderGroup in pairs(data.defenderGroups) do
+            if not defenderGroup.player.is_shortcut_toggled("defend-player") and attackedEntity.surface.index == defenderGroup.surface.index then 
+                defenderGroup:defend_base(attackedEntity)
+            end
+        end
     end
 
 end
 
-local function removeCombatRobotFromGroup(event)
+local on_tick = function()
 
-    if event.unit.name ~= modDefines.units.defender and event.unit.name ~= modDefines.units.destroyer then return end
+    for _, defenderGroup in pairs(data.defenderGroups) do 
+        defenderGroup:update()
+    end
 
-    local group_number = event.group.group_number
-    local combatUnit = data.combatUnits[group_number]
+    for _, destroyerGroup in pairs(data.destroyerGroups) do 
+        destroyerGroup:update(data.targetList)
+    end
 
-    combatUnit.members = combatUnit.members - 1
+end
 
-    if combatUnit.members == 0 then 
+script.on_init(on_init)
+script.on_load(on_load)
 
-        if combatUnit.unitType == modDefines.units.defender then 
-            combatUnit.player.set_shortcut_available("toggle-defender", false)
-        end
+-- script.on_configuration_changed(configuration_changed)
+script.on_event(defines.events.on_runtime_mod_setting_changed, modsettings_changed)
 
-        combatUnit.player.print({ "messages.unitgroup-destroyed", combatUnit.unitType, string.format("[gps= %d, %d]", combatUnit.unitGroup.position.x, combatUnit.unitGroup.position.y )})
-        data.combatUnits[group_number] = nil 
+-- script.on_event(defines.events.on_player_joined_game, player_joined_game) --TODO: Search for player units and reactivate them 
+-- script.on_event(defines.events.on_player_left_game, player_left_game) --TODO: Set Defender Units to automatic defense
+-- script.on_event(defines.events.on_player_kicked, player_kicked) --TODO: Destroy groups from kicked player 
+
+script.on_event(defines.events.on_player_changed_surface, player_changed_surface) --TODO: get defender, set to base defense 
+script.on_event({defines.events.on_lua_shortcut, "defend-player"}, toggle_defender_follow)
+script.on_event(defines.events.on_chunk_charted, check_area_for_enemy_bases)
+
+script.on_event(defines.events.on_entity_died, entity_died)
+script.on_event(defines.events.on_player_mined_entity, entity_mined, modDefines.eventFilters)
+
+script.on_event(defines.events.on_player_used_spider_remote, remote_used)
+script.on_event(defines.events.on_player_used_capsule, player_used_capsule)
+script.on_event(defines.events.script_raised_built, createdEntity, modDefines.eventFilters)
+script.on_event(defines.events.on_trigger_created_entity, created_entity)
+
+script.on_event(defines.events.on_entity_damaged, defend_base)
+-- script.on_event(defines.events.on_ai_command_completed, command_completed)
+
+script.on_nth_tick(60, on_tick)
+
+
     
-    end
-
-end
-
-local function entityMined(event)
-
-    local combatUnit = getCombatUnit(event.entity.last_user, event.entity.name)
-    local player = game.players[event.player_index]
-
-    if combatUnit and combatUnit.unitGroup.valid then 
-        combatUnit.members = combatUnit.members - 1
-
-        if combatUnit.members == 0 then 
-
-            local group_number = combatUnit.unitGroup.group_number
-            
-            if event.entity.name == modDefines.units.defender then 
-                combatUnit.player.set_shortcut_available("toggle-defender", false)
-            end
-           -- combatUnit.player.print({ "messages.unitgroup-destroyed", combatUnit.unitType, string.format("[gps= %d, %d]", combatUnit.unitGroup.position.x, combatUnit.unitGroup.position.y )})
-            data.combatUnits[group_number] = nil 
-        end
-    end
-
-end
-
-local function entityDied(event)
-
-    local combatUnit = getCombatUnit(event.entity.last_user, event.entity.name)
-
-    if combatUnit then 
-        combatUnit.members = combatUnit.members - 1 
-    end
-
-end
-
-local function finishedGathering(event)
-
-    if event.group.force.name ~= "player" then return end
-
-    for _, combatUnit in pairs(data.combatUnits) do 
-        if combatUnit.unitGroup == event.group and combatUnit.unitGroup.valid and not combatUnit.readyForAction then 
-            combatUnit.readyForAction = true 
-        end
-    end
-
-end
-
-local function commandCompleted(event)
-
-    if event.was_distracted or event.result ~= defines.behavior_result.success then return end
-
-    if util.tableContainsValue(data.waitList, event.unit_number) then 
-
-       local combatUnit, entity = data.waitList[event.unit_number].combatUnit, data.waitList[event.unit_number].entity
-
-        if combatUnit and combatUnit.unitGroup.valid then 
-
-            if allowNewGroupMembers(combatUnit) then 
-                addMemberToUnitGroup(entity, combatUnit)
-                data.waitList[event.unit_number] = nil 
-            else
-                entity.set_command({ type = defines.command.wander, radius = 5, ticks_to_wait = 360, distraction = defines.distraction.by_anything })
-            end
-        else
-            combatUnit = createCombatUnit(game.players[entity.last_user], entity)
-            addMemberToUnit(entity, combatUnit)
-        end
-    
-    elseif util.tableContainsValue(data.combatUnits, event.unit_number) then 
-
-    end
-
-end
-
-local function updateDefenderFollower(player, unitGroup)
-
-    local defender_distance = settings.get_player_settings(player.index)["defender-distance"].value 
-
-    if unitGroup.command and unitGroup.command.type ~= 6 then return end
-
-    unitGroup.set_command({ type = defines.command.go_to_location, destination_entity = player.character or nil, destination = (not player.character and player.position) or nil, radius = defender_distance - 8, distraction = defines.distraction.by_anything, pathfind_flags = modDefines.pathfinding_flags })
-
-    --adjust robot speed to match player inside or out a vehicle
-    for _, member in pairs(unitGroup.members) do 
-        if player.driving then 
-            member.speed = math.abs(player.vehicle.speed) + 0.1
-        elseif player.character then
-            member.speed = player.character.character_running_speed + 0.2 
-        end
-    end
-
-    -- unitGroup.start_moving()
-
-end
-
-local function defendBase(event)
-
-    if event.force.name == "enemy" then 
-
-        for _, combatUnit in pairs(data.combatUnits) do 
-
-            if combatUnit.unitType == modDefines.units.defender and not combatUnit.player.is_shortcut_toggled("toggle-defender") and combatUnit.readyForAction and not data.defenceExcludeList[event.entity.name] then
-
-                local unitGroup = combatUnit.unitGroup
-                local targetDistance = util.getDistance(event.entity.position, unitGroup.position)
-
-                if targetDistance <= settings.global["base-defender-radius"].value then
-                    
-                    if unitGroup.command and unitGroup.command.type == defines.command.attack_area and not unitGroup.distraction_command then           
-                        if util.samePosition(unitGroup.command.destination, event.entity.position) then 
-                            return 
-                        elseif targetDistance > util.getDistance(unitGroup.command.destination, unitGroup.position) then 
-                            return 
-                        end
-                    end
-
-                    unitGroup.set_command({ type = defines.command.attack_area, destination = event.entity.position, radius = 50, distraction = defines.distraction.by_enemy })   
-                end
-            end
-        end
-    end
-    
-end
-
-local function handleDestroyerUnit(unitGroup)
-
-    if next(data.attackList) then
-        
-        if ( not unitGroup.command or unitGroup.command.type ~= defines.command.attack_area ) and not unitGroup.distraction_command then 
-
-            local targetEntity = unitGroup.surface.get_closest(unitGroup.position, data.attackList) 
-
-            if targetEntity and targetEntity.valid then 
-                unitGroup.set_command({ type = defines.command.attack_area, destination = targetEntity.position, radius = 20, distraction = defines.distraction.by_enemy })
-            end
-        end
-
-        unitGroup.start_moving()
-
-    elseif not unitGroup.command or unitGroup.command.type == 9 then
-        unitGroup.set_command({ type = defines.command.wander, radius = 50, distraction = defines.distraction.by_enemy})
-    end
-
-end
-
-local function onTick()
-
-    for _, combatUnit in pairs (data.combatUnits) do 
-        if combatUnit.unitType == modDefines.units.defender and combatUnit.readyForAction then
-            if combatUnit.unitGroup.valid then 
-                if combatUnit.player.is_shortcut_toggled("toggle-defender") then
-                    updateDefenderFollower(combatUnit.player, combatUnit.unitGroup)
-                elseif not combatUnit.unitGroup.command then 
-                    combatUnit.unitGroup.set_command({ type = defines.command.wander, radius = 15, distraction = defines.distraction.by_enemy })
-                    combatUnit.unitGroup.start_moving()
-                end
-            end
-        elseif combatUnit.unitType == modDefines.units.destroyer and combatUnit.readyForAction then 
-            local waitTick = combatUnit.createdTick + ( settings.global["time-before-attack"].value * 60 )
-
-            if game.tick > waitTick and combatUnit.unitGroup.valid then 
-                handleDestroyerUnit(combatUnit.unitGroup)
-            end
-        end
-    end
-
-end
-
-script.on_init(init)
-script.on_load(load)
-
-script.on_event(defines.events.on_runtime_mod_setting_changed, modSettingsChanged)
-script.on_event(defines.events.on_player_joined_game, playerJoined)
-
-script.on_event({defines.events.on_lua_shortcut, "keyboard-toggle-defender"}, toggleDefenderFollow)
-
-script.on_event(defines.events.on_chunk_charted, checkAreaForEnemyBases)
-script.on_event(defines.events.on_entity_destroyed, entityDestroyed)
-
-script.on_event(defines.events.on_player_used_capsule, playerUsedCapsule)
-script.on_event(defines.events.script_raised_built, createdEntity, modDefines.combatRobotFilter)
-script.on_event(defines.events.on_trigger_created_entity, createdEntity)
-
-script.on_event(defines.events.on_player_mined_entity, entityMined, modDefines.combatRobotFilter )
-script.on_event(defines.events.on_unit_removed_from_group, removeCombatRobotFromGroup)
-script.on_event(defines.events.on_entity_died, entityDied, { { filter = "name", name = modDefines.units.sentry } })
-
-script.on_event(defines.events.on_unit_group_finished_gathering, finishedGathering)
-script.on_event(defines.events.on_ai_command_completed, commandCompleted)
-
-script.on_event(defines.events.on_entity_damaged, defendBase)
-
-
-
-script.on_nth_tick(60, onTick)
