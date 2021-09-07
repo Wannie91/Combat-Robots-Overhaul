@@ -16,13 +16,13 @@ data:extend({
         type = "double-setting", 
         name = "sentry-radius", 
         setting_type = "runtime-global",
-        default_value = 10,
+        default_value = 3,
         minimum_value = 1,
         maximum_value = 20
     },
     {
         type = "double-setting",
-        name = "base-defender-radius",
+        name = "base-defence-perimeter",
         setting_type = "runtime-global",
         default_value = 2500,
         minimum_value = 100,
@@ -32,17 +32,16 @@ data:extend({
         type = "double-setting",
         name = "defender-distance",
         setting_type = "runtime-per-user",
-        default_value = 3,
-        minimum_value = 0,
-        maximum_value = 10
+        default_value = 10,
+        minimum_value = 1,
+        maximum_value = 100
     },
     {
         type = "int-setting", 
-        name = "time-before-attack",
+        name = "attack-delay",
         setting_type = "runtime-global",
         default_value = 10,
         minimum_value = 1,
         maximum_value = 60
     },
-
 })

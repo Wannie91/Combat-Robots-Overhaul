@@ -1,13 +1,10 @@
 {
     "name": "CombatRobotsOverhaul",
-    "version": "1.0.8",
+    "version": "2.0.0",
+    "title": "Combat Robot Overhaul",
     "author": "Wannie",
-    "title": "Combat Robots Overhaul",
-    "factorio_version": "1.1",
-    "dependencies": [
-        "base >= 1.1",
-        "!space-exploration"                    
-    ],
-    "homepage": "www.mods.factorio.com/mod/CombatRobotOverhaul",
-    "description": "Overhaul of Factorio's Combat Robots to make them more useful. Destroyer Robots seek and destroy discovered biter nests. Defender robots either defend the player or the base (Togglable). Distractor Robots have been renamed to Sentry Bots and defend the area where they have been thrown at."
+    "factorio_version": "1.1.0",
+    "dependencies": ["base >= 1.1.0"],
+    "homepage": "https://forums.factorio.com/viewtopic.php?f=190&t=97907",
+    "description": "This mod overhauls Factorio's vanilla combat robots to make them more useful. Destroyer Robots now seek and destroy discovered biter nests (worms and nests). Defender Units will either follow the player or defend the base in case of an enemy attack (toggle-able). Distractor Units have been renamed to Sentry Units to better describe their purpose. They now act as cheap semi-mobile turrets"
 }
