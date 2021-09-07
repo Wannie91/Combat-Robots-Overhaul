@@ -37,7 +37,7 @@ function BaseGroup:remove_member(entity)
     self.group_members[entity.unit_number] = nil 
 
     if not self:has_members() then 
-        self.player.print({"messages.group-destroyed", entity.name, string.format("[gps = %d %d]", self.group_position.x, self.group_position.y)})
+        self.player.print({"messages.group-destroyed", entity.name, string.format("[gps= %d, %d]", self.group_position.x, self.group_position.y)})
     end
 
     self.last_update_tick = game.tick 
