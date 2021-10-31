@@ -199,15 +199,13 @@ local sentry_unit =
             category = "laser",
             action =
             {
+                type = "direct",
+                action_delivery = 
                 {
-                    type = "direct",
-                    action_delivery = 
-                    {
-                        type = "beam",
-                        beam = "laser-beam",
-                        max_length = 15,
-                        duration = 20,
-                    }
+                    type = "beam",
+                    beam = "laser-beam",
+                    max_length = 20,
+                    duration = 10,
                 }
             } 
         },
@@ -215,7 +213,7 @@ local sentry_unit =
         {
             layers = 
             {
-                animations.sentry_unit.idle,
+                animations.sentry_unit_idle,
                 animations.sentry_unit.shadow_idle
             }
         }

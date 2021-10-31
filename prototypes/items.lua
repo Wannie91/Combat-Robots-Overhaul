@@ -211,9 +211,11 @@ local items =
     },
 }
 
+
 data:extend({
     item_category,
     combat_grid,
+    equipment_category
 })
 
 data:extend(equipment, items) 

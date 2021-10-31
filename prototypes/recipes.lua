@@ -1,4 +1,5 @@
-data:extend({
+data:extend(
+{
     {
         type = "recipe",
         name = "defender-unit",

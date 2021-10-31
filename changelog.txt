@@ -1,73 +1,80 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.5
+Date: 31.10.2021
+  Changes:
+    - Fixed Bug where Sentry Units didn't do any on_entity_damaged
+    - Changed the base defense code of defender-units to make it more similar to the behavior of destroyer units 
+    - Changed the move_to_target offset to a random number between -10 and 10 instead of the distance between group_position and unit
+    - Cleaned up Code
+---------------------------------------------------------------------------------------------------
 Version: 2.0.4
 Date: 15.10.2021
   Changes:
-  - Replaced the Destroyer Unit prototypes with Spider Vehicle to improve the pathfinding and combat mechanics of the destroyer unit
-  - Changed the attack as well as the defeding behaviour of destroyer and defender units
+    - Replaced the Destroyer Unit prototypes with Spider Vehicle to improve the pathfinding and combat mechanics of the destroyer unit
+    - Changed the attack as well as the defeding behaviour of destroyer and defender units
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.3
 Date: ????
   Changes:
-  - Removed the "destroyer" prerequisite from Follower-Robot-Count-5
+    - Removed the "destroyer" prerequisite from Follower-Robot-Count-5
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.2
 Date: ????
   Changes:
-  - Fixed Crash on_entity_damaged 
+    - Fixed Crash on_entity_damaged 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.1
 Date: 07.09.2021
   Changes:
-  - Changed Defender Units from Type "Unit" to "Spider Vehicle"
-  - Overhauled the entire code base
-  - Added Surface filters to targetList as well as Unit Groups (This should make it compatible with mods who change the surface like Space Exploration"
-  - Added Compability Patch for "Industrial Revolution 2" and "Un-Minable Bots"
+    - Changed Defender Units from Type "Unit" to "Spider Vehicle"
+    - Overhauled the entire code base
+    - Added Surface filters to targetList as well as Unit Groups (This should make it compatible with mods who change the surface like Space Exploration"
+    - Added Compability Patch for "Industrial Revolution 2" and "Un-Minable Bots"
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.9
 Date: 30.08.2021
   Changes:
-  - Fixed Issue with invalid unitgroup on various occasions
+    - Fixed Issue with invalid unitgroup on various occasions
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.8 
 Date: 23.06.2021
-Changes:
-  - Removed Destroyer Capsule from prequiste for max-follower-update-5  
-  - Fixed Crash when moving backwards in crash
-  - Fixed Crash when deploying new units when previous group was pdestroyed
----------------------------------------------------------------------------------------------------
+  Changes:
+    - Removed Destroyer Capsule from prequiste for max-follower-update-5  
+    - Fixed Crash when moving backwards in crash
+    - Fixed Crash when deploying new units when previous group was pdestroyed
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.7 
 Date: 29.04.2021
-Changes:
-  - Fixed Issue with the defense Exlusion List
+  Changes:
+    - Fixed Issue with the defense Exlusion List
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.6
 Date: 20.04.2021
-Changes:
-  - Fixed Issue when mining defender units
+  Changes:
+    - Fixed Issue when mining defender units
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.5
 Date: 20.04.2021
-Changes:
-	- Changed the vision distance & attack range of destroyer unit.
+  Changes:
+    - Changed the vision distance & attack range of destroyer unit.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.4
 Date: 19.04.2021
-Changes:
-	- Fixed crash when mining units.
+  Changes:
+    - Fixed crash when mining units.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.3
 Date: 18.04.2021
-Changes:
-	- Fixed missing unit sounds.
+  Changes:
+    - Fixed missing unit sounds.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.2
 Date: 17.04.2021
-Changes: 
-	- Fixed issue with defender and sentry units not attacking
-	- Fixed issue with event filter not working properly 
+  Changes:
+    - Fixed issue with defender and sentry units not attacking
+    - Fixed issue with event filter not working properly 
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 16.04.2021
-Changes:
-	- Initial Release
+  Changes:
+    - Initial Release
