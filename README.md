@@ -1,7 +1,7 @@
 # Combat Robots Overhaul
 
 ## Version
-2.0.1
+2.0.4
 
 ## Description
 This mod aims to overhaul the behaviour of Factorio's vanilla combat robots to make them more useful. 
