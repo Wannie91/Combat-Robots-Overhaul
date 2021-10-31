@@ -76,6 +76,15 @@ local toggle_defender_follow = function(event)
 
     player.set_shortcut_toggled(input, not player.is_shortcut_toggled(input))
 
+    if not player.is_shortcut_toggled(input) then 
+
+        local combatGroup = get_combatGroup(modDefines.units.defender, player.index, player.surface.index)
+
+        if combatGroup then 
+            combatGroup:stop_following_player()
+        end 
+    end
+
 end
 
 local check_area_for_enemy_bases = function(event)
@@ -111,6 +120,8 @@ end
 
 local entity_mined = function(event)
 
+    if not event.entity.last_user then return end
+
     local entity = event.entity 
     local combatGroup = get_combatGroup(entity.name, entity.last_user.index, entity.surface.index)
 
@@ -122,7 +133,7 @@ end
 
 local remote_used = function(event)
 
-    if event.vehicle.name == modDefines.units.defender then 
+    if event.vehicle.name == modDefines.units.defender or event.name == modDefines.units.destroyer then 
         event.vehicle.follow_target = nil
         event.vehicle.autopilot_destination = nil    
     end
@@ -165,15 +176,12 @@ local created_entity = function(event)
         if entity.name == modDefines.units.defender then 
             combatGroup = DefenderGroup:new(player)
             table.insert(data.defenderGroups, combatGroup)
-            -- data.defenderGroups[player.index] = combatGroup
         elseif entity.name == modDefines.units.sentry then 
             combatGroup = SentryGroup:new(player)
             table.insert(data.sentryGroups, combatGroup)
-            -- data.sentryGroups[player.index] = combatGroup
         elseif entity.name == modDefines.units.destroyer then 
             combatGroup = DestroyerGroup:new(player)
             table.insert(data.destroyerGroups, combatGroup)
-            -- data.destroyerGroups[player.index] = combatGroup
         end
     end
 
@@ -216,14 +224,10 @@ end
 script.on_init(on_init)
 script.on_load(on_load)
 
--- script.on_configuration_changed(configuration_changed)
+script.on_configuration_changed(configuration_changed)
 script.on_event(defines.events.on_runtime_mod_setting_changed, modsettings_changed)
 
--- script.on_event(defines.events.on_player_joined_game, player_joined_game) --TODO: Search for player units and reactivate them 
--- script.on_event(defines.events.on_player_left_game, player_left_game) --TODO: Set Defender Units to automatic defense
--- script.on_event(defines.events.on_player_kicked, player_kicked) --TODO: Destroy groups from kicked player 
-
-script.on_event(defines.events.on_player_changed_surface, player_changed_surface) --TODO: get defender, set to base defense 
+script.on_event(defines.events.on_player_changed_surface, player_changed_surface)
 script.on_event({defines.events.on_lua_shortcut, "defend-player"}, toggle_defender_follow)
 script.on_event(defines.events.on_chunk_charted, check_area_for_enemy_bases)
 
@@ -232,11 +236,9 @@ script.on_event(defines.events.on_player_mined_entity, entity_mined, modDefines.
 
 script.on_event(defines.events.on_player_used_spider_remote, remote_used)
 script.on_event(defines.events.on_player_used_capsule, player_used_capsule)
-script.on_event(defines.events.script_raised_built, createdEntity, modDefines.eventFilters)
+script.on_event(defines.events.script_raised_built, created_entity, modDefines.eventFilters)
 script.on_event(defines.events.on_trigger_created_entity, created_entity)
-
 script.on_event(defines.events.on_entity_damaged, defend_base)
--- script.on_event(defines.events.on_ai_command_completed, command_completed)
 
 script.on_nth_tick(60, on_tick)
 

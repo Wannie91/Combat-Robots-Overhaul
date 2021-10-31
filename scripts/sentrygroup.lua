@@ -19,7 +19,7 @@ function SentryGroup:add_member(entity)
 
     BaseGroup.add_member(self, entity)
 
-    entity.set_command({ type = defines.command.wander, radius = settings.global["sentry-perimeter"].value, distraction = defines.distraction.by_anything })
+    entity.set_command({ type = defines.command.wander, radius = settings.global["sentry-radius"].value, distraction = defines.distraction.by_anything })
 
 end
 

@@ -9,10 +9,11 @@ if not settings.startup["enable-vanilla-combatrobots"].value then
     data.raw.recipe["defender-capsule"].enabled = false
     data.raw.recipe["distractor-capsule"].enabled = false
     data.raw.recipe["destroyer-capsule"].enabled = false
-    
+
     data.raw.technology.defender.effects[1] = nil
-    data.raw.technology.distractor.effects[1] = nil
-    data.raw.technology.destroyer.effects[1] = nil
+
+    data.raw.technology.distractor.enabled = false
+    data.raw.technology.destroyer.enabled = false
 
     data.raw.technology["follower-robot-count-5"].prerequisites[2] = nil
 
@@ -25,9 +26,7 @@ if mods["UnminableBots"] then
 end
 
 if mods["IndustrialRevolution"] then
-    -- data.raw.technology["follower-robot-count-4"].effects[3] = nil
-    -- data.raw.technology["follower-robot-count-7"].effects[3] = nil
-
+    
     table.insert(data.raw.technology["defender"].effects, { type = "unlock-recipe", recipe = "sentry-unit" })
     table.insert(data.raw.technology["defender"].effects, { type = "unlock-recipe", recipe = "defender-unit" })
     table.insert(data.raw.technology["defender"].effects, { type = "unlock-recipe", recipe = "destroyer-unit" })

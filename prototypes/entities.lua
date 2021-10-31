@@ -1,17 +1,20 @@
+local collision_mask_util = require("__core__/lualib/collision-mask-util.lua")
 local hit_effects = require("__base__/prototypes/entity/hit-effects")
 local sounds = require("__base__/prototypes/entity/sounds")
 local animations = require("animations")
+local layer = collision_mask_util.get_first_unused_layer()
+
 
 local equipment_category = 
 {
     type = "equipment-category",
-    name = "defender-unit-category",
+    name = "combat-unit-category",
 }
 
 local spider_leg = 
 {
     type = "spider-leg",
-    name = "defender-leg",
+    name = "combat-leg",
     selectable_in_game = false,
     graphics_set = create_spidertron_leg_graphics_set(0,1),
     initial_movement_speed = 100,
@@ -22,6 +25,8 @@ local spider_leg =
     target_position_randomisation_distance = 0,
     walking_sound_volume_modifier = 0,
     working_sound = nil,
+    collision_box = {{-0.5, -0.5}, {0.5, 0.5}}, 
+    collision_mask = {layer},
 }
 
 local defender_unit = 
@@ -34,6 +39,7 @@ local defender_unit =
     flags = {"placeable-player", "player-creation", "placeable-off-grid"},
     minable = {mining_time = 0.5, result = "defender-unit-capsule"},
     placeable_by = {item = "defender-unit-capsule", count = 1},
+    collision_mask = {layer},
     subgroup = "capsule",
     order = "e-b-a",
 
@@ -41,11 +47,11 @@ local defender_unit =
     height = 1, 
     weight = 1,
     energy_source = {type = "void"},
-    equipment_grid = "defender-unit-equipment-grid",
+    equipment_grid = "combat-unit-equipment-grid",
     inventory_size = 0,
     chunk_exploration_radius = 2,
     movement_energy_consumption = "1KW",
-    braking_force = 1,
+    braking_force = 2,
     friction_force = 1,
     energy_per_hit_point = 1,
 
@@ -56,22 +62,22 @@ local defender_unit =
 
     torso_rotation_speed = 0.05,
     graphics_set = animations.defender_unit,
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
     selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
+    drawing_box = {{-0.5, -0.5}, {0.5, 0.5}},
     hit_visualization_box = {{-0.1, -1.1}, {0.1, -1.0}},
-    friendly_map_color = {0, 128, 0},
+    friendly_map_color = {0, 128, 0, 1},
+    map_color = {0, 128, 0, 1},
     sticker_box = {{-0.1, -0.1}, {0.1, 0.1}},
-    collision_mask = {"layer-19"},
-    render_layer = "air-object",
 
     spider_engine = 
     {
         legs = 
         {
             {
-                leg = "defender-leg",
-                mount_position = {0,0},
-                ground_position = {0,0},
+                leg = "combat-leg",
+                mount_position = {0, -1},
+                ground_position = {0, -1},
                 blocking_legs = {1},
                 leg_hit_the_ground_trigger = nil,
             }
@@ -80,10 +86,11 @@ local defender_unit =
     },
 
     dying_explosion = "defender-robot-explosion",
+    corpse = "defender-remnants",
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
 
-    resistance = 
+    resistances = 
     {
         {
             type = "fire", 
@@ -107,10 +114,27 @@ local defender_unit =
         apparent_volume = 1,
         persistent = true,
     },
+
+    minimap_representation = 
+    {
+        filename = "__CombatRobotsOverhaul__/graphics/icons/defender-icon.png",
+        flags = {"icon"},
+        size = {60,79},
+        scale = 0.15,
+        tint = {1, 1, 1, 1},
+    },
     
     sound_minimum_speed = 0.1,
     sound_scaling_ratio = 0.1,
 }
+
+defender_unit.graphics_set.render_layer = "air-entity-info-icon"
+defender_unit.graphics_set.base_render_layer = "air-object"
+defender_unit.graphics_set.autopilot_path_visualisation_line_width = 0
+defender_unit.graphics_set.autopilot_path_visualisation_on_map_line_width = 0
+defender_unit.graphics_set.autopilot_destination_visualisation = util.empty_sprite()
+defender_unit.graphics_set.autopilot_destination_queue_on_map_visualisation = util.empty_sprite()
+defender_unit.graphics_set.autopilot_destination_on_map_visualisation = util.empty_sprite()
 
 local sentry_unit = 
 {
@@ -136,18 +160,18 @@ local sentry_unit =
     min_pursue_time = 10 * 60,
     max_pursue_distance = 50,
 
-    collision_box = {{0, 0}, {0, 0}},
+    collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
     selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
     hit_visualization_box = {{-0.1, -1.1}, {0.1, -1.0}},
     sticker_box = {{-0.1, -0.1}, {0.1, 0.1}},
     friendly_map_color = {0, 100, 0},
-    collision_mask = {"layer-19"},
+    collision_mask = {layer},
     dying_explosion = "distractor-robot-explosion",
     distance_per_frame = 0.1,
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
 
-    resistance = 
+    resistances = 
     {
         {
             type = "fire",
@@ -182,7 +206,7 @@ local sentry_unit =
                         type = "beam",
                         beam = "laser-beam",
                         max_length = 15,
-                        duration = 10,
+                        duration = 20,
                     }
                 }
             } 
@@ -191,7 +215,7 @@ local sentry_unit =
         {
             layers = 
             {
-                animations.sentry_unit_idle,
+                animations.sentry_unit.idle,
                 animations.sentry_unit.shadow_idle
             }
         }
@@ -226,83 +250,74 @@ local sentry_unit =
 
 local destroyer_unit = 
 {
-    type = "unit",
+    type = "spider-vehicle",
     name = "destroyer-unit",
     icon = "__base__/graphics/icons/destroyer.png",
-    icon_size = 64, icon_mipmaps = 4,
+    icon_size = 64, 
+    icon_mipmaps = 4,
     flags = {"placeable-player", "player-creation", "placeable-off-grid"},
-    minable = { mining_time = 0.5, result = "destroyer-unit-capsule"},
+    minable = {mining_time = 0.5, result = "destroyer-unit-capsule"},
     placeable_by = {item = "destroyer-unit-capsule", count = 1},
     subgroup = "capsule",
-    order = "e-b-c",
+    order = "e-b-a",
 
-    max_health = 120,
-    vision_distance = 45,
-    radar_range = 1,
-    movement_speed = 0.2,
+    max_health = 80,
+    height = 1, 
+    weight = 1,
+    energy_source = {type = "void"},
+    equipment_grid = "combat-unit-equipment-grid",
+    inventory_size = 0,
+    chunk_exploration_radius = 2,
+    movement_energy_consumption = "1KW",
+    braking_force = 1,
+    friction_force = 1,
+    energy_per_hit_point = 1,
 
-    has_belt_immunity = true,
+    automatic_weapon_cycling = false, 
+    chain_shooting_cooldown_modifier = 0.5,
     alert_when_damaged = false,
-    pollution_to_join_attack = 0,
-    distraction_cooldown = 300,
-    min_pursue_time = 10 * 60,
-    max_pursue_distance = 50,
-    ai_settings = { do_separation = false },
+    allow_passengers = false,
 
-    collision_box = { {0, 0}, { 0, 0} },
-    selection_box = { {-0.5, -0.5}, {0.5, 0.5} },
-    hit_visualization_box =  { {-0.1, -1.4}, {0.1, -1.3} },
-    friendly_map_color = { 0, 128, 0},
-    collision_mask = { "layer-19" },
+    torso_rotation_speed = 0.05,
+    graphics_set = animations.destroyer_unit,
+    collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
+    selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
+    hit_visualization_box = {{-0.1, -1.1}, {0.1, -1.0}},
+    friendly_map_color = {0, 200, 0},
+    sticker_box = {{-0.1, -0.1}, {0.1, 0.1}},
+    collision_mask = {layer},
+    
+    spider_engine = 
+    {
+        legs = 
+        {
+            {
+                leg = "combat-leg",
+                mount_position = {0,0},
+                ground_position = {0,0},
+                blocking_legs = {1},
+                leg_hit_the_ground_trigger = nil,
+            }
+        },
+        military_target = "spidertron-military-target",
+    },
+
     dying_explosion = "destroyer-robot-explosion",
-    distance_per_frame = 0.15,
+    corpse = "destroyer-remnants",
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
 
-    resistance = 
+    resistances = 
     {
         {
-            type = "fire",
+            type = "fire", 
             decrease = 0,
-            percent = 95
+            percent = 95,
         },
         {
             type = "acid",
             decrease = 0,
-            percent = 95
-        }
-    },
-    attack_parameters = 
-    {
-        type = "beam",
-        ammo_category = "beam",
-        cooldown = 20,
-        cooldown_deviation = 0.2,
-        range = 15,
-        sound = make_laser_sounds(),
-        ammo_type = 
-        {
-            category = "beam",
-            action = 
-            {
-                type = "direct",
-                action_delivery =
-                {
-                    type = "beam",
-                    beam = "electric-beam",
-                    max_length = 15,
-                    duration = 20,
-                    source_offset = { 0.15, -0.5 }
-                }
-            }
-        },
-        animation = 
-        {
-            layers = 
-            {
-                animations.destroyer_unit.idle,
-                animations.destroyer_unit.shadow_idle
-            }
+            percent = 95,
         }
     },
 
@@ -310,28 +325,34 @@ local destroyer_unit =
     {
         sound = 
         {
-            filename = "__base__/sound/fight/destroyer-robot-loop.ogg",
+            filename = "__base__/sound/fight/defender-robot-loop.ogg",
             volume = 0.7
         },
         apparent_volume = 1,
-        persistent = true
+        persistent = true,
     },
 
-    dying_trigger_effect = 
+    minimap_representation = 
     {
-        type = "create-entity",
-        entity_name = "destroyer-robot-explosion",
+        filename = "__CombatRobotsOverhaul__/graphics/icons/destroyer-icon.png",
+        flags = {"icon"},
+        size = {70,76},
+        scale = 0.15,
+        tint = {1, 1, 1, 1},
     },
     
-    run_animation = 
-    {
-        layers = 
-        {
-            animations.destroyer_unit.in_motion,
-            animations.destroyer_unit.shadow_in_motion
-        }
-    },
+    sound_minimum_speed = 0.1,
+    sound_scaling_ratio = 0.1,
+    
 }
+
+destroyer_unit.graphics_set.render_layer = "air-entity-info-icon"
+destroyer_unit.graphics_set.base_render_layer = "air-object"
+destroyer_unit.graphics_set.autopilot_path_visualisation_line_width = 0
+destroyer_unit.graphics_set.autopilot_path_visualisation_on_map_line_width = 0
+destroyer_unit.graphics_set.autopilot_destination_visualisation = util.empty_sprite()
+destroyer_unit.graphics_set.autopilot_destination_queue_on_map_visualisation = util.empty_sprite()
+destroyer_unit.graphics_set.autopilot_destination_on_map_visualisation = util.empty_sprite()
 
 local speed_sticker = 
 {

@@ -13,41 +13,41 @@ data:extend({
             attack_parameters = 
             {
                 type = "projectile",
+                activation_type = "throw",
                 ammo_category = "capsule",
                 projectile_creation_distance = 0.6,
                 cooldown = 15,
-                range = 20,
+                range = 25,
                 ammo_type = 
                 {
                     category = "capsule",
                     target_type = "position",
                     action = 
                     {
-                        type = "direct",
-                        action_delivery = 
-                        {
-                            type = "instant",
-                            target_effects = 
+                        {                                
+                            type = "direct",
+                            action_delivery = 
                             {
-                                type = "damage",
-                                damage = {type = "physical", amount = 0}
+                                type = "instant",
+                                target_effects = 
+                                {
+                                    type = "damage",
+                                    damage = {type = "physical", amount = 0}
+                                }
                             }
-                        }
-                        -- type = "projectile",
-                        -- projectile = "defender-unit-capsule",
-                        -- starting_speed = 0.3
-                    }
-                },
-                {
-                    type = "direct",
-                    action_delivery = 
-                    {
-                        type = "instant",
-                        target_effects = 
+                        },
                         {
+                            type = "direct",
+                            action_delivery = 
                             {
-                                type = "play-sound",
-                                sound = sounds.throw_projectile,
+                                type = "instant",
+                                target_effects = 
+                                {
+                                    {
+                                        type = "play-sound",
+                                        sound = sounds.throw_projectile,
+                                    }
+                                }
                             }
                         }
                     }
@@ -138,7 +138,7 @@ data:extend({
                     target_type = "position",
                     action = 
                     {
-                        {
+                        {                                
                             type = "direct",
                             action_delivery = 
                             {
@@ -148,9 +148,6 @@ data:extend({
                                     type = "damage",
                                     damage = {type = "physical", amount = 0}
                                 }
-                                -- type = "projectile",
-                                -- projectile = "destroyer-unit-capsule",
-                                -- starting_speed = 0.3
                             }
                         },
                         {

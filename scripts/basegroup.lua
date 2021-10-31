@@ -40,7 +40,7 @@ function BaseGroup:remove_member(entity)
         self.player.print({"messages.group-destroyed", entity.name, string.format("[gps= %d, %d]", self.group_position.x, self.group_position.y)})
     end
 
-    self.last_update_tick = game.tick 
+    -- self.last_update_tick = game.tick 
 
 end
 
