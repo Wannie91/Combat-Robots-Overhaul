@@ -4,19 +4,19 @@ local animations = require("animations")
 local item_category = 
 {
     type = "item-subgroup",
-    name = "defender-unit-category",
+    name = "combat-unit-category",
     group = "combat",
     order = "f[combatrobot]",
 }
 
-local defender_grid = 
+local combat_grid = 
 {
     type = "equipment-grid",
-    name = "defender-unit-equipment-grid",
+    name = "combat-unit-equipment-grid",
     width = 0,
     height = 0,
     locked = true,
-    equipment_categories = {"defender-unit-category"}
+    equipment_categories = {"combat-unit-category"}
 }
 
 local equipment = 
@@ -37,7 +37,7 @@ local equipment =
             },
         },
         placed_as_equipment_result = "defender-unit-equipment",
-        subgroup = "defender-unit-category",
+        subgroup = "combat-unit-category",
         order = "g[combatrobot]",
         default_request_amount = 1,
         stack_size = 20,
@@ -45,7 +45,7 @@ local equipment =
     {
         type = "active-defense-equipment",
         name = "defender-unit-equipment",
-        categories = {"defender-unit-category"},
+        categories = {"combat-unit-category"},
         sprite = 
         {
             filename = "__base__/graphics/icons/submachine-gun.png",
@@ -95,20 +95,81 @@ local equipment =
                             },
                             {
                                 type = "damage",
-                                damage = {amount = 9, type = "physical"}
+                                damage = {amount = 8, type = "physical"}
                             }
                         }
                     }
                 }
             },
-            animation = 
+        },
+    },
+    {
+        type = "item",
+        name = "destroyer-unit-equipment",
+        icons = 
+        {
             {
-                layers = 
+                icon = "__base__/graphics/icons/submachine-gun.png",
+                icon_size = 64,
+            },
+            {
+                icon = "__base__/graphics/icons/submachine-gun.png",
+                icon_size = 64,
+                scale = 0.333,
+            },
+        },
+        placed_as_equipment_result = "destroyer-unit-equipment",
+        subgroup = "combat-unit-category",
+        order = "g[combatrobot]",
+        default_request_amount = 1,
+        stack_size = 20,
+    },
+    {
+        type = "active-defense-equipment",
+        name = "destroyer-unit-equipment",
+        categories = {"combat-unit-category"},
+        sprite = 
+        {
+            filename = "__base__/graphics/icons/submachine-gun.png",
+            size = 1,
+            priority = "low"
+        },
+        shape = 
+        {
+            width = 0,
+            height = 0,
+            type = "full",
+        },
+        energy_source = 
+        {
+            type = "void",
+            usage_priority = "primary-input",
+        },
+        automatic = true,
+        attack_parameters = 
+        {
+            type = "beam",
+            ammo_category = "beam",
+            cooldown = 20,
+            cooldown_deviation = 0.2,
+            range = 20,
+            sound = make_laser_sounds(),
+            ammo_type = 
+            {
+                category = "beam",
+                action = 
                 {
-                    animations.defender_unit.base_animation,
-                    animations.defender_unit.shadow_base_animation
+                    type = "direct",
+                    action_delivery =
+                    {
+                        type = "beam",
+                        beam = "electric-beam",
+                        max_length = 20,
+                        duration = 20,
+                        source_offset = { 0.15, -0.5 }
+                    }
                 }
-            }
+            },
         },
     },
 }
@@ -138,7 +199,7 @@ local items =
         stack_size = 25,
     },
     {
-        type = "item",
+        type = "item-with-entity-data",
         name = "destroyer-unit",
         icon = "__base__/graphics/icons/destroyer.png",
         icon_size = 32,
@@ -152,7 +213,7 @@ local items =
 
 data:extend({
     item_category,
-    defender_grid,
+    combat_grid,
 })
 
 data:extend(equipment, items) 

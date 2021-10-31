@@ -1,10 +1,26 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.4
+Date: 15.10.2021
+  Changes:
+  - Replaced the Destroyer Unit prototypes with Spider Vehicle to improve the pathfinding and combat mechanics of the destroyer unit
+  - Changed the attack as well as the defeding behaviour of destroyer and defender units
+---------------------------------------------------------------------------------------------------
+Version: 2.0.3
+Date: ????
+  Changes:
+  - Removed the "destroyer" prerequisite from Follower-Robot-Count-5
+---------------------------------------------------------------------------------------------------
+Version: 2.0.2
+Date: ????
+  Changes:
+  - Fixed Crash on_entity_damaged 
+---------------------------------------------------------------------------------------------------
 Version: 2.0.1
 Date: 07.09.2021
   Changes:
   - Changed Defender Units from Type "Unit" to "Spider Vehicle"
   - Overhauled the entire code base
-  - Added Surface filters to targetList as well as Unit Groups (This should make it compatible with mods who change the surface"
+  - Added Surface filters to targetList as well as Unit Groups (This should make it compatible with mods who change the surface like Space Exploration"
   - Added Compability Patch for "Industrial Revolution 2" and "Un-Minable Bots"
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.9
@@ -51,7 +67,7 @@ Changes:
 	- Fixed issue with defender and sentry units not attacking
 	- Fixed issue with event filter not working properly 
 ---------------------------------------------------------------------------------------------------
-VersioN: 1.0.1
+Version: 1.0.1
 Date: 16.04.2021
 Changes:
 	- Initial Release

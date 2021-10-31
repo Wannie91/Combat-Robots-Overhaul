@@ -41,7 +41,7 @@ function DefenderGroup:stop_following_player()
 
     for _, member in pairs(self.group_members) do 
         member.follow_target = nil 
-        member.autopilot_destination = nil 
+        -- member.autopilot_destination = nil 
     end
 
 end
@@ -60,20 +60,33 @@ function DefenderGroup:search_for_enemies_near_player()
 
 end
 
+function DefenderGroup:defend_entity(entity) 
+
+    for _, member in pairs(self.group_members) do 
+        member.autopilot_destination = entity.position
+    end
+
+    self.last_attack_tick = game.tick 
+    self.is_defending = true
+    self.current_target = entity
+
+end
+
 function DefenderGroup:attack_enemy(enemy) 
+
+    local group_position = self.group_position
+    local distance = util.get_distance(self.group_position, enemy.position) - 16
 
     for _, member in pairs(self.group_members) do 
 
-        local position = member.position 
-        local distance = util.get_distance(position, enemy.position) - 16
-
         if math.abs(distance) > 2 then 
-            local offset = util.get_offset(position, enemy.position, distance, (distance < 0 and math.pi/4) or 0)
 
-            position.x = position.x + offset[1]
-            position.y = position.y + offset[2]
+            local offset = util.get_offset(group_position, enemy.position, distance, (distance < 0 and math.pi/4) or 0)
 
-            member.autopilot_destination = position 
+            group_position.x = group_position.x + offset[1]
+            group_position.y = group_position.y + offset[2]
+
+            member.autopilot_destination = group_position
         end
     end
 
@@ -90,7 +103,7 @@ function DefenderGroup:get_player_speed(boost)
     if self.player.vehicle then 
         return math.abs(self.player.vehicle.speed) * boost 
     elseif self.player.character then 
-        return self.player.character_running_speed * boost 
+        return math.abs(self.player.character_running_speed) * boost 
     end
 
     return 0.3
@@ -102,11 +115,11 @@ function DefenderGroup:get_distance_boost(entity_position, position)
     local distance = util.get_distance(entity_position, position)
 
     if distance > 500 then 
-        return (distance / 50) 
+        return (distance / 150) 
     elseif distance > 250 then 
-        return (distance / 100)
-    elseif distance > 250 then 
-        return (distance / 150)
+        return (distance / 200)
+    elseif distance > 50 then 
+        return (distance / 250)
     end
 
     return 1
@@ -215,13 +228,13 @@ end
 
 function DefenderGroup:defend_base(attacked_entity)
 
-    if (self.surface.index == attacked_entity.surface.index and self.player.is_shortcut_toggled("defend-player")) or (self.current_target.valid and util.same_position(attacked_entity.position, self.current_target.position)) or not self:has_members() then return end 
+    if (self.surface.index == attacked_entity.surface.index and self.player.is_shortcut_toggled("defend-player")) or (self.current_target and self.current_target.valid and util.same_position(attacked_entity.position, self.current_target.position)) or not self:has_members() then return end 
     
     local distance_to_target = util.get_distance(attacked_entity.position, self:get_group_position())
 
     if distance_to_target < settings.global["base-defence-perimeter"].value and not self.is_defending or (self.current_target.valid and self.current_target.position and distance_to_target < util.get_distance(self.current_target.position, self:get_group_position())) then 
         
-        self:attack_enemy(attacked_entity)
+        self:defend_entity(attacked_entity)
         
         for _, member in pairs(self.group_members) do 
             if member.autopilot_destination then 
@@ -249,8 +262,6 @@ function DefenderGroup:update()
     
     elseif self.is_defending then 
         self.is_defending = (game.tick - self.last_attack_tick) < 60
-    else
-        self:stop_following_player()
     end
 
 end
