@@ -131,15 +131,6 @@ local entity_mined = function(event)
 
 end
 
-local remote_used = function(event)
-
-    if event.vehicle.name == modDefines.units.defender or event.name == modDefines.units.destroyer then 
-        event.vehicle.follow_target = nil
-        event.vehicle.autopilot_destination = nil    
-    end
-
-end
-
 local player_used_capsule = function(event) 
 
     local item = event.item 
@@ -185,15 +176,21 @@ local created_entity = function(event)
         end
     end
 
+    if entity.name == modDefines.units.defender or entity.name == modDefines.units.destroyer then 
+        entity.grid.put{name = entity.name.."-equipment"}
+        entity.operable = false
+    end
+
     combatGroup:add_member(entity)
 
 end
 
 local player_changed_surface = function(event) 
 
-    local combatGroup = get_combatGroup(modDefines.units.defender, event.player_index, event.surface_index)
+    local player = game.get_player(event.player_index)
+    local combatGroup = get_combatGroup(modDefines.units.defender, player.index, event.surface_index) 
 
-    if combatGroup then 
+    if combatGroup and player.is_shortcut_toggled("defend-player") then 
         combatGroup:stop_following_player()
     end 
 
@@ -202,8 +199,8 @@ end
 local defend_base = function(event) 
 
     if event.force.name == "enemy" and event.entity.has_flag("player-creation") and not data.defenceExcludeList[event.entity.name] then 
-        for player_index, defenderGroup in pairs(data.defenderGroups) do
-            defenderGroup:defend_base(event.entity)
+        for _, defenderGroup in pairs(data.defenderGroups) do
+            defenderGroup:defend_base(event.cause)
         end
     end
 
@@ -227,15 +224,14 @@ script.on_load(on_load)
 script.on_configuration_changed(configuration_changed)
 script.on_event(defines.events.on_runtime_mod_setting_changed, modsettings_changed)
 
-script.on_event(defines.events.on_player_changed_surface, player_changed_surface)
-script.on_event({defines.events.on_lua_shortcut, "defend-player"}, toggle_defender_follow)
 script.on_event(defines.events.on_chunk_charted, check_area_for_enemy_bases)
+script.on_event({defines.events.on_lua_shortcut, "defend-player"}, toggle_defender_follow)
+
+script.on_event(defines.events.on_player_changed_surface, player_changed_surface)
+script.on_event(defines.events.on_player_mined_entity, entity_mined, modDefines.eventFilters)
+script.on_event(defines.events.on_player_used_capsule, player_used_capsule)
 
 script.on_event(defines.events.on_entity_died, entity_died)
-script.on_event(defines.events.on_player_mined_entity, entity_mined, modDefines.eventFilters)
-
-script.on_event(defines.events.on_player_used_spider_remote, remote_used)
-script.on_event(defines.events.on_player_used_capsule, player_used_capsule)
 script.on_event(defines.events.script_raised_built, created_entity, modDefines.eventFilters)
 script.on_event(defines.events.on_trigger_created_entity, created_entity)
 script.on_event(defines.events.on_entity_damaged, defend_base)
