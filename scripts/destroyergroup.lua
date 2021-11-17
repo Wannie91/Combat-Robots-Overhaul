@@ -47,7 +47,7 @@ function DestroyerGroup:update(targetList)
         end
 
         if self.is_moving and self.last_attack_tick ~= 0 and (game.tick - self.last_attack_tick) > 18000 then 
-            for _, member in pairs(self.group_members) do 
+            for _, member in pairs(self.members) do 
                 if not member.autopilot_destination then 
                     member.autopilot_destination = self.current_target.position
                 end

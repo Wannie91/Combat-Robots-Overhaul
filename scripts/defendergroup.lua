@@ -202,14 +202,14 @@ function DefenderGroup:update()
 
     if was_attacking and self.is_attacking then return end 
 
-    if self.player.is_shortcut_toggled("defend-player") and self.player.surface.index == self.surface.index then 
+    if self.player.is_shortcut_toggled("defend-player") and self.player.surface.index == self.surface.index and self:has_members() then 
 
         self:search_for_enemy_near_position(self.player.position, 32)
 
         if not was_attacking and not self.is_attacking then 
             self:follow_player()
         end    
-    elseif self.is_moving and self:valid_entity(self.current_target) and util.get_distance(self.group_position, self.current_target.position) <= 48 then 
+    elseif self.is_moving and self:valid_entity(self.current_target) and util.get_distance(self.group_position, self.current_target.position) <= 48 and self:has_members() then 
         self:search_for_enemy_near_position(self.group_position, 48)
     end
 
