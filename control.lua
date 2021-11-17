@@ -141,7 +141,7 @@ local player_used_capsule = function(event)
         local unitType = modDefines.associations[item.name]
         local combatGroup = get_combatGroup(unitType, player.index, player.surface.index) 
 
-        if not combatGroup or combatGroup:get_member_count() < game.forces.player.maximum_following_robot_count then 
+        if not combatGroup or combatGroup:get_member_count() < player.force.maximum_following_robot_count then 
             if player.character then 
                 player.surface.create_entity{name = item.name, player = player, position = player.position, target = event.position, force = player.force, source = player.character, speed = 0.3, max_range = 25}
             else
