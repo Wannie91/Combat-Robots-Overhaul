@@ -7,7 +7,6 @@ setmetatable(DestroyerGroup, {__index = BaseGroup})
 function DestroyerGroup:new(player) 
 
     local destroyerGroup = BaseGroup:new(player) 
-    destroyerGroup.is_attacking = false
 
     setmetatable(destroyerGroup, {__index = DestroyerGroup})
     return destroyerGroup
@@ -24,38 +23,39 @@ function DestroyerGroup:ready_for_attack()
 
 end
 
-function DestroyerGroup:attack_enemy(target)
-
-    for _, member in pairs(self.group_members) do 
-        if member.valid then 
-            member.set_command({type = defines.command.attack_area, destination = target.position, radius = 15, distraction = defines.distraction.by_enemy})
-        end    
-    end
-
-    self.last_attack_tick = game.tick 
-    self.is_attacking = true
-    self.current_target = target
-
-end
-
 function DestroyerGroup:update(targetList)
 
     self:get_group_position()
-
+   
     if not self:ready_for_attack() then return end 
 
-    local was_attacking = self.is_attacking 
+    local was_attacking = self.is_attacking
     self.is_attacking = (game.tick - self.last_attack_tick) < 60
 
-    if not self.is_attacking and not was_attacking then 
+    if self:has_members() and was_attacking and not self.is_attacking then 
+        self:search_for_enemy_near_position(self.group_position, 32)
+    end
 
-        if next(targetList[self.surface.index]) and self:has_members() then 
+    if was_attacking and self.is_attacking then return end 
 
-            local target_entity = self.surface.get_closest(self.group_position, targetList[self.surface.index]) 
+    if next(targetList[self.surface.index]) and self:has_members() then 
 
-            if target_entity and target_entity.valid and target_entity ~= self.current_target  then 
-                self:attack_enemy(target_entity)
+        local target_entity = self.surface.get_closest(self.group_position, targetList[self.surface.index])
+
+        if not self.is_moving or not self:valid_entity(self.current_target) or (self.current_target ~= target_entity and util.get_distance(self.group_position, self.current_target.position) < util.get_distance(self.group_position, target_entity.position)) then 
+            self:move_to_target(target_entity)
+        end
+
+        if self.is_moving and self.last_attack_tick ~= 0 and (game.tick - self.last_attack_tick) > 18000 then 
+            for _, member in pairs(self.members) do 
+                if not member.autopilot_destination then 
+                    member.autopilot_destination = self.current_target.position
+                end
             end
+        end
+
+        if self.is_moving and (util.get_distance(self.group_position, self.current_target.position)) <= 48 then 
+            self:search_for_enemy_near_position(self.group_position, 48)
         end
     end
 
