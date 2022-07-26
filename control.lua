@@ -24,6 +24,20 @@ local get_combatGroup = function(type, player_index, surface_index)
     end
 
 end
+
+local prune_targetList = function()
+
+    if data.targetList then 
+        for surface, list in pairs(data.targetList) do 
+            for unit_number, entity in pairs(list) do 
+                if not entity.valid then 
+                    data.targetList[surface][unit_number] = nil
+                end
+            end
+        end
+    end
+
+end
     
 local on_init = function() 
 
@@ -96,6 +110,7 @@ local check_area_for_enemy_bases = function(event)
     for _, entity in pairs(game.get_surface(event.surface_index).find_entities_filtered({area = event.area, force = "enemy", type  = {"unit-spawner", "turret"}})) do 
         if not util.table_contains_value(data.targetList[event.surface_index], entity.unit_number) and entity.active then 
             data.targetList[event.surface_index][entity.unit_number] = entity
+            script.register_on_entity_destroyed(entity)
         end
     end
 
@@ -113,6 +128,18 @@ local entity_died = function(event)
 
         if combatGroup then 
             combatGroup:remove_member(entity)
+        end
+    end
+
+end
+
+local entity_destroyed = function(event)
+
+    if event.unit_number then 
+        for surface_id, surface in pairs(data.targetList) do 
+            if util.table_contains_value(data.targetList[surface_id], event.unit_number) then 
+                data.targetList[surface_id][event.unit_number] = nil               
+            end 
         end
     end
 
@@ -140,6 +167,10 @@ local player_used_capsule = function(event)
         local player = game.get_player(event.player_index)
         local unitType = modDefines.associations[item.name]
         local combatGroup = get_combatGroup(unitType, player.index, player.surface.index) 
+              
+        local projectile = player.surface.find_entities_filtered{ name = item.name, position = player.position, radius = 15, force = player.force}
+        projectile[1].destroy()
+        
 
         if not combatGroup or combatGroup:get_member_count() < player.force.maximum_following_robot_count then 
             if player.character then 
@@ -198,7 +229,7 @@ end
 
 local defend_base = function(event) 
 
-    if event.force.name == "enemy" and event.entity.has_flag("player-creation") and not data.defenceExcludeList[event.entity.name] then 
+    if event.force.name == "enemy" and event.entity.has_flag("player-creation") and not data.defenceExcludeList[event.entity.name] and event.cause and event.cause.valid then 
         for _, defenderGroup in pairs(data.defenderGroups) do
             defenderGroup:defend_base(event.cause)
         end
@@ -207,6 +238,8 @@ local defend_base = function(event)
 end
 
 local on_tick = function()
+    
+    -- prune_targetList()
 
     for _, defenderGroup in pairs(data.defenderGroups) do 
         defenderGroup:update()
@@ -232,10 +265,12 @@ script.on_event(defines.events.on_player_mined_entity, entity_mined, modDefines.
 script.on_event(defines.events.on_player_used_capsule, player_used_capsule)
 
 script.on_event(defines.events.on_entity_died, entity_died)
+script.on_event(defines.events.on_entity_destroyed, entity_destroyed)
 script.on_event(defines.events.script_raised_built, created_entity, modDefines.eventFilters)
 script.on_event(defines.events.on_trigger_created_entity, created_entity)
 script.on_event(defines.events.on_entity_damaged, defend_base)
 
+commands.add_command("prune-attacklist", "Delete invalid entities from the attack list", prune_targetList)
 script.on_nth_tick(60, on_tick)
 
 

@@ -1,4 +1,31 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.10
+Date: 26.07.2022
+  Changes:
+    - Registered worms and nests via game script so they are removed from the target list if another mods replaces or destroys them
+---------------------------------------------------------------------------------------------------
+Version: 2.0.9
+Date: 05.12.2021
+  Changes:
+    - Disabled the corpse parameter on destroyer and defender units which led to the creation of two corpses for one unit
+    - Thanks to Gelion17 the mod now has russian localization.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.8
+Date: 24.11.2021
+  Changes:
+    - Fixed a bug which occured when the base was attacked by invalid entities
+---------------------------------------------------------------------------------------------------
+Version: 2.0.7
+Date: 17.11.2021
+  Changes:
+    - Fixed a Bug which caused the game to crash when all destroyer untis were destroyed 
+    - Changed the reference for maximum_following_robot_count from the global force to the player force
+---------------------------------------------------------------------------------------------------
+Version: 2.0.6
+Date: 16.11.2021
+  Changes:
+    - Fixed Bug which caused the game to crash when all defender units were destroyed
+---------------------------------------------------------------------------------------------------
 Version: 2.0.5
 Date: 31.10.2021
   Changes:
