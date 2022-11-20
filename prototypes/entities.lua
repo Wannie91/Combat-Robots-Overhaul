@@ -51,9 +51,10 @@ local defender_unit =
     inventory_size = 0,
     chunk_exploration_radius = 2,
     movement_energy_consumption = "1KW",
-    braking_force = 2,
+    braking_force = 1,
     friction_force = 1,
     energy_per_hit_point = 1,
+    -- guns = { "defender-unit-gun" },
 
     automatic_weapon_cycling = false, 
     chain_shooting_cooldown_modifier = 0.5,
@@ -86,7 +87,7 @@ local defender_unit =
     },
 
     dying_explosion = "defender-robot-explosion",
-    corpse = "defender-remnants",
+    -- corpse = "defender-remnants",
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
 
@@ -266,7 +267,7 @@ local destroyer_unit =
     equipment_grid = "combat-unit-equipment-grid",
     inventory_size = 0,
     chunk_exploration_radius = 2,
-    movement_energy_consumption = "1KW",
+    movement_energy_consumption = "20KW",
     braking_force = 1,
     friction_force = 1,
     energy_per_hit_point = 1,
@@ -301,7 +302,7 @@ local destroyer_unit =
     },
 
     dying_explosion = "destroyer-robot-explosion",
-    corpse = "destroyer-remnants",
+    -- corpse = "destroyer-remnants",
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
 

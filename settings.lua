@@ -9,7 +9,7 @@ data:extend({
         type = "string-setting",
         name = "defence-exclude-list",
         setting_type = "runtime-global", 
-        default_value = "defender-unit,sentry-unit,destroyer-unit,gun-turret,laser-turret,distractor,defender,destroyer,wall,gate,spidertron",
+        default_value = "defender-unit,sentry-unit,destroyer-unit,gun-turret,laser-turret,distractor,defender,destroyer,stone-wall,gate,spidertron",
         allow_blank = true,
     },
     {

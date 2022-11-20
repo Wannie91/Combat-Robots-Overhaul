@@ -37,8 +37,6 @@ function BaseGroup:remove_member(entity)
         self.player.print({"messages.group-destroyed", entity.name, string.format("[gps= %d, %d]", self.group_position.x, self.group_position.y)})
     end
 
-    self.last_update_tick = game.tick 
-
 end
 
 function BaseGroup:get_group_position()
@@ -61,7 +59,7 @@ function BaseGroup:get_member_count()
 
     local count = 0
      
-    for _, member in pairs (self.members) do
+    for _, member in pairs(self.members) do
         if member.valid then 
             count = count + 1
         end
@@ -117,6 +115,7 @@ function BaseGroup:search_for_enemy_near_position(position, radius)
     for _, enemy in pairs(enemies) do 
         if self:valid_entity(enemy) then 
             self:attack_enemy(enemy) 
+            return
         end
     end
 
@@ -124,17 +123,17 @@ end
 
 function BaseGroup:attack_enemy(enemy)
 
-    local position = self.group_position 
-    local distance = util.get_distance(position, enemy.position) - 16
-
     for _, member in pairs(self.members) do 
+
+        local distance = util.get_distance(member.position, enemy.position) - 16
+        local position = member.position
 
         if math.abs(distance) > 2 then 
 
-            local offset = util.get_offset(position, enemy.position, distance, (distance < 0 and math.pi/4) or 0)
+            local offset = util.get_offset(member.position, enemy.position, distance, (distance < 0 and math.pi/4) or 0)
 
-            position.x = position.x + offset[1]
-            position.y = position.y + offset[2]
+            position.x = position.x + offset[1] - math.random(-10, 10)
+            position.y = position.y + offset[2] - math.random(-10, 10)
 
             member.autopilot_destination = position
         end

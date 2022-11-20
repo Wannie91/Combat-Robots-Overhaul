@@ -174,6 +174,58 @@ local equipment =
     },
 }
 
+local guns = 
+{
+    type = "gun",
+    name = "defender-unit-gun",
+    -- localised_name = {"item-name.defender-unit-gun"},
+    icon = "__base__/graphics/icons/submachine-gun.png",
+    icon_size = 64,
+    icon_mipmaps = 4,
+    subgroup = "gun",
+    flags = {"hidden"},
+    order = "h[combatrobot]-a[defender-unit-gun]",
+    stack_size = 1,
+    attack_parameters = 
+    {
+        type = "projectile",
+        cooldown = 20,
+        cooldown_deviation = 0.2,
+        projectile_center = {0,1},
+        projectile_creation_distance = 0.6,
+        range = 15,
+        sound = sounds.defender_gunshot,
+        ammo_type = 
+        {
+            category = "bullet",
+            action = 
+            {
+                type = "direct",
+                action_delivery = 
+                {
+                    type = "instant",
+                    source_effects = 
+                    {
+                        type = "create-explosion",
+                        entity_name = "explosion-gunshot-small",
+                    },
+                    target_effects = 
+                    {
+                        {
+                            type = "create-entity",
+                            entity_name = "explosion-hit",
+                        },
+                        {
+                            type = "damage",
+                            damage = {amount = 8, type = "physical"}
+                        }
+                    }
+                }
+            }
+        },
+    }
+}
+
 local items = 
 {
     {
@@ -215,6 +267,7 @@ local items =
 data:extend({
     item_category,
     combat_grid,
+    -- guns,
     equipment_category
 })
 

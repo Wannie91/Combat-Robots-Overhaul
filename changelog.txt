@@ -1,4 +1,50 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.7
+Date: 19.11.2022
+  Changes:
+    - Removed some non-essential code
+---------------------------------------------------------------------------------------------------
+Version: 2.1.6
+Date: 17.11.2022
+  Changes:
+    - Fixed a bug which caused the game to crash when the player died right before the combat robot could spawn
+---------------------------------------------------------------------------------------------------
+Version: 2.1.5
+Date: 16.11.2022
+  Changes:
+    - Undid a change which caused the game to crash when the defender units attempted to defend something
+---------------------------------------------------------------------------------------------------
+Version: 2.1.4
+Date: 12.11.2022
+  Changes:
+    - Fixed Bug which caused projectiles to vanish when spawning capsules in short order
+    - Combat Robots will now spawn directly when flying with a jeptack. This is done to prevent a crash which happens when the player is damaged right after he has thrown a capsule but the entity hasn't spawned yet.
+---------------------------------------------------------------------------------------------------
+Version: 2.1.3
+Date: 25.10.2022
+  Changes:
+    - Hopefully decreased the load time when deleting a lot of chunks
+---------------------------------------------------------------------------------------------------
+Version: 2.1.2
+Date: 30.08.2022
+  Changes:
+    - Fixed an issue which caused units to not target nearest enemies while traveling
+    - Changed the name of walls in exclude settings to stone-walls so defender-units don't defend them
+---------------------------------------------------------------------------------------------------
+Version: 2.1.1
+Date: 10.08.2022
+  Changes:
+    - Fixed a bug which caused defender units to not defend the base
+---------------------------------------------------------------------------------------------------
+Version: 2.1.0
+Date: 03.08.2022
+  Changes:
+    - Balanced the speed of defender units when attacking so they don't overshoot their target all the time
+    - Hopefully fixed a bug where destoryer units got stuck for a long time and were destroyed one by one
+    - Adjusted the destroyer units behaviour so they spread out more and don't clump together
+    - Fixed bug where thrown capsules weren't counted towards the overall combatrobot follower count, thus allowing to have more bots than the limit
+    - Increased performance when scanning area with lots of biter nests
+---------------------------------------------------------------------------------------------------
 Version: 2.0.10
 Date: 26.07.2022
   Changes:

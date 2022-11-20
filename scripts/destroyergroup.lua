@@ -42,7 +42,7 @@ function DestroyerGroup:update(targetList)
 
         local target_entity = self.surface.get_closest(self.group_position, targetList[self.surface.index])
 
-        if not self.is_moving or not self:valid_entity(self.current_target) or (self.current_target ~= target_entity and util.get_distance(self.group_position, self.current_target.position) < util.get_distance(self.group_position, target_entity.position)) then 
+        if not self.is_moving or not self:valid_entity(self.current_target) or not self:valid_entity(target_entity) or (self.current_target ~= target_entity and util.get_distance(self.group_position, self.current_target.position) < util.get_distance(self.group_position, target_entity.position)) then 
             self:move_to_target(target_entity)
         end
 

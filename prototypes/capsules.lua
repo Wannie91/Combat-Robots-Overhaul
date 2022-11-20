@@ -16,7 +16,7 @@ data:extend({
                 activation_type = "throw",
                 ammo_category = "capsule",
                 projectile_creation_distance = 0.6,
-                cooldown = 15,
+                cooldown = 30,
                 range = 25,
                 ammo_type = 
                 {
@@ -28,12 +28,16 @@ data:extend({
                             type = "direct",
                             action_delivery = 
                             {
-                                type = "instant",
-                                target_effects = 
-                                {
-                                    type = "damage",
-                                    damage = {type = "physical", amount = 0}
-                                }
+                                -- type = "instant",
+                                -- target_effects = 
+                                -- {
+                                --     type = "damage",
+                                --     show_in_tooltip = false,
+                                --     damage = {type = "physical", amount = 0}
+                                -- }
+                                type = "projectile",
+                                projectile = "defender-unit-capsule",
+                                starting_speed = 0.3
                             }
                         },
                         {
@@ -43,10 +47,8 @@ data:extend({
                                 type = "instant",
                                 target_effects = 
                                 {
-                                    {
-                                        type = "play-sound",
-                                        sound = sounds.throw_projectile,
-                                    }
+                                    type = "play-sound",
+                                    sound = sounds.throw_projectile,
                                 }
                             }
                         }
@@ -69,9 +71,10 @@ data:extend({
             attack_parameters = 
             {
                 type = "projectile",
+                activation_type = "throw",
                 ammo_category = "capsule",
                 projectile_creation_distance = 0.6,
-                cooldown = 15,
+                cooldown = 30,
                 range = 20,
                 ammo_type = 
                 {
@@ -83,15 +86,15 @@ data:extend({
                             type = "direct",
                             action_delivery = 
                             {
-                                type = "instant",
-                                target_effects = 
-                                {
-                                    type = "damage",
-                                    damage = {type = "physical", amount = 0}
-                                },
-                                -- type = "projectile",
-                                -- projectile = "sentry-unit-capsule",
-                                -- starting_speed = 0.3
+                                -- type = "instant",
+                                -- target_effects = 
+                                -- {
+                                --     type = "damage",
+                                --     damage = {type = "physical", amount = 0}
+                                -- },
+                                type = "projectile",
+                                projectile = "sentry-unit-capsule",
+                                starting_speed = 0.3
                             }
                         },
                         {
@@ -107,7 +110,22 @@ data:extend({
                                     }
                                 }
                             }
-                        }
+                        },
+                        -- {
+                        --     type = "direct",
+                        --     action_delivery = 
+                        --     {
+                        --         type = "instant",
+                        --         target_effects = 
+                        --         {
+                        --             {
+                        --                 type = "create-entity",
+                        --                 entity_name = "sentry-unit",
+                        --                 show_in_tooltip = true,
+                        --             }
+                        --         }
+                        --     }
+                        -- }
                     }
                 }
             }
@@ -128,8 +146,9 @@ data:extend({
             attack_parameters = 
             {
                 type = "projectile",
+                activation_type = "throw",
                 ammo_category = "capsule",
-                cooldown = 15,
+                cooldown = 30,
                 projectile_creation_distance = 0.6,
                 range = 20,
                 ammo_type = 
@@ -142,12 +161,15 @@ data:extend({
                             type = "direct",
                             action_delivery = 
                             {
-                                type = "instant",
-                                target_effects = 
-                                {
-                                    type = "damage",
-                                    damage = {type = "physical", amount = 0}
-                                }
+                                -- type = "instant",
+                                -- target_effects = 
+                                -- {
+                                --     type = "damage",
+                                --     damage = {type = "physical", amount = 0}
+                                -- }
+                                type = "projectile",
+                                projectile = "destroyer-unit-capsule",
+                                starting_speed = 0.3
                             }
                         },
                         {

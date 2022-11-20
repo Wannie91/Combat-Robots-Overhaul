@@ -60,15 +60,18 @@ function DefenderGroup:get_distance_boost(entity_position, position)
 
     local distance = util.get_distance(entity_position, position)
 
-    if distance > 500 then 
-        return (distance / 150) 
-    elseif distance > 250 then 
+    if distance > 1000 then 
+        return (distance / 250) 
+    elseif distance > 600 then 
         return (distance / 200)
-    elseif distance > 50 then 
-        return (distance / 250)
+    elseif distance > 100 then 
+        return (distance / 50)
     end
 
     return 1
+    -- local boost = distance / 50
+
+    -- return boost
 
 end
 
@@ -163,7 +166,7 @@ function DefenderGroup:follow_player()
         end
 
         follower.follow_offset = follow_offset 
-        self:set_member_speed(follower, follower.speed + self:get_distance_boost(follower.position, follower.autopilot_destination))
+        self:set_member_speed(follower, player_speed + self:get_distance_boost(follower.position, follower.autopilot_destination))
         self.last_update_tick = game.tick
 
     end
@@ -176,7 +179,7 @@ function DefenderGroup:defend_base(attacking_entity)
     
     local distance_to_target = util.get_distance(attacking_entity.position, self.group_position) 
 
-    if distance_to_target < settings.global["base-defence-perimeter"].value and (not self:valid_entity(self.current_taret) or distance_to_target < util.get_distance(self.current_target.position, self.group_position)) and not self.is_moving then 
+    if distance_to_target < settings.global["base-defence-perimeter"].value and (not self:valid_entity(self.current_taret) or distance_to_target < util.get_distance(self.current_target.position, self.group_position)) then 
  
         self:move_to_target(attacking_entity) 
         
@@ -198,6 +201,11 @@ function DefenderGroup:update()
 
     if self:has_members() and was_attacking and not self.is_attacking then 
         self:search_for_enemy_near_position(self.group_position, 32)
+        for _, member in pairs(self.members) do 
+            if member.speed > 0.25 then 
+                self:set_member_speed(member, 0.25)
+            end
+        end
     end
 
     if was_attacking and self.is_attacking then return end 

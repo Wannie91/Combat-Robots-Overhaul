@@ -25,20 +25,6 @@ local get_combatGroup = function(type, player_index, surface_index)
 
 end
 
-local prune_targetList = function()
-
-    if data.targetList then 
-        for surface, list in pairs(data.targetList) do 
-            for unit_number, entity in pairs(list) do 
-                if not entity.valid then 
-                    data.targetList[surface][unit_number] = nil
-                end
-            end
-        end
-    end
-
-end
-    
 local on_init = function() 
 
     global.combatRobotsOverhaulData = global.combatRobotsOverhaulData or data
@@ -108,7 +94,7 @@ local check_area_for_enemy_bases = function(event)
     end
 
     for _, entity in pairs(game.get_surface(event.surface_index).find_entities_filtered({area = event.area, force = "enemy", type  = {"unit-spawner", "turret"}})) do 
-        if not util.table_contains_value(data.targetList[event.surface_index], entity.unit_number) and entity.active then 
+        if entity.active then 
             data.targetList[event.surface_index][entity.unit_number] = entity
             script.register_on_entity_destroyed(entity)
         end
@@ -120,7 +106,7 @@ local entity_died = function(event)
 
     local entity = event.entity
     if entity.force.name == "enemy" and (entity.type == "unit-spawner" or entity.type == "turret") then 
-        if util.table_contains_value(data.targetList[entity.surface.index], entity.unit_number) then  
+        if data.targetList[entity.surface.index] then 
             data.targetList[entity.surface.index][entity.unit_number] = nil 
         end
     elseif entity.force.name == "player" and (entity.name == modDefines.units.defender or entity.name == modDefines.units.sentry or entity.name == modDefines.units.destroyer) then 
@@ -128,7 +114,7 @@ local entity_died = function(event)
 
         if combatGroup then 
             combatGroup:remove_member(entity)
-        end
+        end        
     end
 
 end
@@ -137,9 +123,9 @@ local entity_destroyed = function(event)
 
     if event.unit_number then 
         for surface_id, surface in pairs(data.targetList) do 
-            if util.table_contains_value(data.targetList[surface_id], event.unit_number) then 
-                data.targetList[surface_id][event.unit_number] = nil               
-            end 
+            if surface[event.unit_number] then 
+                data.targetList[surface_id][event.unit_number] = nil
+            end
         end
     end
 
@@ -166,14 +152,27 @@ local player_used_capsule = function(event)
 
         local player = game.get_player(event.player_index)
         local unitType = modDefines.associations[item.name]
-        local combatGroup = get_combatGroup(unitType, player.index, player.surface.index) 
-              
-        local projectile = player.surface.find_entities_filtered{ name = item.name, position = player.position, radius = 15, force = player.force}
-        projectile[1].destroy()
-        
+        local combatGroup = get_combatGroup(unitType, player.index, player.surface.index)
 
-        if not combatGroup or combatGroup:get_member_count() < player.force.maximum_following_robot_count then 
-            if player.character then 
+        local projectile = player.surface.find_entities_filtered{ name = item.name, position = player.position, radius = 5, force = player.force}
+        projectile[1].destroy()  
+
+        if not combatGroup or (combatGroup:get_member_count() + player.surface.count_entities_filtered{ name = item.name, position = player.position, radius = 25, force = player.force}) < player.force.maximum_following_robot_count then 
+            
+            local block_projectile = false
+
+            if remote.interfaces.jetpack then 
+
+                local jetpacks = remote.call("jetpack", "get_jetpacks", {})
+
+                for _, jetpack in pairs(jetpacks) do 
+                    if jetpack.player_index == player.index and jetpack.status >= 2 then 
+                        block_projectile = true 
+                    end
+                end
+            end
+            
+            if player.character and not block_projectile then
                 player.surface.create_entity{name = item.name, player = player, position = player.position, target = event.position, force = player.force, source = player.character, speed = 0.3, max_range = 25}
             else
                 player.surface.create_entity{name = unitType, player = player, position = event.position, force = player.force, raise_built = true}
@@ -191,18 +190,40 @@ local created_entity = function(event)
     if event.entity.name ~= modDefines.units.defender and event.entity.name ~= modDefines.units.sentry and event.entity.name ~= modDefines.units.destroyer then return end 
 
     local entity = event.entity
-    local player = game.get_player(event.entity.last_user.index)
-    local combatGroup = get_combatGroup(entity.name, player.index, entity.surface.index)
+
+    if not entity.last_user then 
+
+        local character_corpses = entity.surface.find_entities_filtered{ name = "character-corpse", position = entity.position, radius = 35 }
+        local newest_corpse_index = 1
+        
+        if #character_corpses > 1 then 
+
+            local latest_tick_of_death = 0
+
+            for key, corpse in pairs(character_corpses) do 
+                if corpse.character_corpse_tick_of_death > latest_tick_of_death then 
+                    latest_tick_of_death = corpse.character_corpse_tick_of_death 
+                    newest_corpse_index = key
+                end
+            end
+        end
+
+        entity.last_user = game.get_player(character_corpses[newest_corpse_index].character_corpse_player_index)
+
+    end
+
+    -- local player = game.get_player(entity.last_user and entity.last_user.index)
+    local combatGroup = get_combatGroup(entity.name, entity.last_user.index, entity.surface.index)
 
     if not combatGroup then 
         if entity.name == modDefines.units.defender then 
-            combatGroup = DefenderGroup:new(player)
+            combatGroup = DefenderGroup:new(entity.last_user)
             table.insert(data.defenderGroups, combatGroup)
         elseif entity.name == modDefines.units.sentry then 
-            combatGroup = SentryGroup:new(player)
+            combatGroup = SentryGroup:new(entity.last_user)
             table.insert(data.sentryGroups, combatGroup)
         elseif entity.name == modDefines.units.destroyer then 
-            combatGroup = DestroyerGroup:new(player)
+            combatGroup = DestroyerGroup:new(entity.last_user)
             table.insert(data.destroyerGroups, combatGroup)
         end
     end
@@ -239,8 +260,6 @@ end
 
 local on_tick = function()
     
-    -- prune_targetList()
-
     for _, defenderGroup in pairs(data.defenderGroups) do 
         defenderGroup:update()
     end
@@ -270,7 +289,6 @@ script.on_event(defines.events.script_raised_built, created_entity, modDefines.e
 script.on_event(defines.events.on_trigger_created_entity, created_entity)
 script.on_event(defines.events.on_entity_damaged, defend_base)
 
-commands.add_command("prune-attacklist", "Delete invalid entities from the attack list", prune_targetList)
 script.on_nth_tick(60, on_tick)
 
 

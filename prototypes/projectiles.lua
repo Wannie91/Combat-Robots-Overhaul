@@ -25,10 +25,10 @@ data:extend({
                 target_effects = 
                 {
                     type = "create-entity",
+                    entity_name = "defender-unit",
                     offset_deviation = {{-1.0, -1.0},{1.0, 1.0}},
                     tile_collision_mask = {"layer-19"},
-                    entity_name = "defender-unit",
-                    show_in_tooltip = true,
+                    show_in_tooltip = false,
                     trigger_created_entity = true,
                 }
             }
@@ -134,7 +134,8 @@ data:extend({
         name = "destroyer-unit-capsule",
         flags = { "not-on-map" },
         acceleration = 0.005,
-        action = {
+        action = 
+        {
             type = "direct",
             action_delivery = 
             {
@@ -144,9 +145,9 @@ data:extend({
                     type = "create-entity",
                     entity_name = "destroyer-unit",
                     tile_collision_mask = {"layer-19"},
-                    -- offset_deviation = {{-1.0, -1.0},{1.0, 1.0}},
-                    show_in_tooltip = true,
-                    trigger_created_entity = "true"
+                    offset_deviation = {{-1.0, -1.0},{1.0, 1.0}},
+                    show_in_tooltip = false,
+                    trigger_created_entity = true
                 }
             }
         },
