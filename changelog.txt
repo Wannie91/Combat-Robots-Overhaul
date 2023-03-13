@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.9
+Date: 02.01.2023
+  Compatibility:
+    - Fixed an issue with space exploration which caused the game to crash when landing a spaceship. Unfortunatly, due to the workings of space exploration, all combat robots will be removed upon landing. 
+
+  Interfaces:
+    - Added a interface which returns the targetList. To get the list, use e.g. remote.call("combat-robot-overhaul", "get_targetList", surface_index = 1). Surface_index can be omitted to get hte list for all surfaces.
+---------------------------------------------------------------------------------------------------
+Version: 2.1.8
+Date: 29.11.2022
+  Bugfixes:
+    - Fixed an issue which caused the key-shortcut to not work
+  Changes:
+    - Defender Units now incorporate social distance from the players again
+    - Default social distance is now set to 0 (so the player is in the middle)
+---------------------------------------------------------------------------------------------------
 Version: 2.1.7
 Date: 19.11.2022
   Changes:

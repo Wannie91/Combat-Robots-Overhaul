@@ -153,9 +153,10 @@ function DefenderGroup:follow_player()
         local angle = (key / count) + dong 
         local follow_offset = util.rotate_vector(offset, angle) 
         local target = follower.follow_target  
+        local social_distancing = settings.get_player_settings(self.player.index)["defender-distance"].value
 
-        follow_offset.x = follow_offset.x + shift.x
-        follow_offset.y = follow_offset.y + shift.y 
+        follow_offset.x = follow_offset.x + shift.x + social_distancing
+        follow_offset.y = follow_offset.y + shift.y + social_distancing
 
         if not (target and target.valid) then 
             if self.player.character then 

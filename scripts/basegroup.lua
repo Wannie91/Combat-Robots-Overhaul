@@ -44,11 +44,13 @@ function BaseGroup:get_group_position()
     local count = 0
     local position = {x = 0, y = 0}
 
-    for _, member in pairs(self.members) do         
-        position.x = position.x + member.position.x
-        position.y = position.y + member.position.y
-    
-        count = count + 1
+    for _, member in pairs(self.members) do
+        if member.valid then          
+            position.x = position.x + member.position.x
+            position.y = position.y + member.position.y
+        
+            count = count + 1
+        end
     end
 
     self.group_position = {x = (position.x / count), y = (position.y / count)}

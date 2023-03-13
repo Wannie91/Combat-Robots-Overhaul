@@ -3,6 +3,7 @@ local modDefines = require("scripts/defines")
 local DefenderGroup = require("scripts/defendergroup")
 local DestroyerGroup = require("scripts/destroyergroup")
 local SentryGroup = require("scripts/sentrygroup")
+require("scripts/remote-interface")
 
 local data = 
 {
@@ -240,11 +241,19 @@ end
 local player_changed_surface = function(event) 
 
     local player = game.get_player(event.player_index)
-    local combatGroup = get_combatGroup(modDefines.units.defender, player.index, event.surface_index) 
+    local defenderGroup = get_combatGroup(modDefines.units.defender, player.index, event.surface_index) 
 
-    if combatGroup and player.is_shortcut_toggled("defend-player") then 
-        combatGroup:stop_following_player()
+    if defenderGroup and player.is_shortcut_toggled("defend-player") then 
+        defenderGroup:stop_following_player()
     end 
+end
+
+local surface_deleted = function(event) 
+
+    data.targetList[event.surface_index] = nil 
+    data.defenderGroups[event.surface_index] = nil 
+    data.sentryGroups[event.surface_index] = nil 
+    data.destroyerGroups[event.surface_index] = nil 
 
 end
 
@@ -280,6 +289,7 @@ script.on_event(defines.events.on_chunk_charted, check_area_for_enemy_bases)
 script.on_event({defines.events.on_lua_shortcut, "defend-player"}, toggle_defender_follow)
 
 script.on_event(defines.events.on_player_changed_surface, player_changed_surface)
+script.on_event(defines.events.on_surface_deleted, surface_deleted)
 script.on_event(defines.events.on_player_mined_entity, entity_mined, modDefines.eventFilters)
 script.on_event(defines.events.on_player_used_capsule, player_used_capsule)
 
@@ -290,6 +300,5 @@ script.on_event(defines.events.on_trigger_created_entity, created_entity)
 script.on_event(defines.events.on_entity_damaged, defend_base)
 
 script.on_nth_tick(60, on_tick)
-
 
     

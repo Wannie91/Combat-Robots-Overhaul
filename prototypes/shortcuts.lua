@@ -2,7 +2,7 @@ data:extend({
     {
         type = "custom-input",
         name = "defend-player",
-        key_sequence = "CONTROL + SHIFT + d",
+        key_sequence = "CONTROL + SHIFT + D",
         consuming = "game-only",
         action = "lua"
     },
