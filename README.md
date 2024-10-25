@@ -1,10 +1,10 @@
 # Combat Robots Overhaul
 
 ## Version
-2.1.7
+2.1.11
 
 ## Description
-This mod aims to overhaul the behaviour of Factorio's vanilla combat robots to make them more useful. 
+This mod aims to overhaul the behaviour of Factorio's vanilla combat robots to make them more useful by automatically attacking enemies. 
 
 Defender Units will either follow the player or automatically defend the base in case of a biter attack. (toggle-able)
 
