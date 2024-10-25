@@ -1,11 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.11
+Date: 25.10.2024
+  Bugfixes:
+    - Worms now target combat robots again
+---------------------------------------------------------------------------------------------------
+Version: 2.1.10
+Date: 21.10.2024
+  Info:
+    - Updated for Factorio 2.0.
+  Changes:
+    - Increased health of Sentry Robots from 100 to 180 to reflect the changes done in Space Age
+    - Added Pentapods and Demolisher to the enemy list
+---------------------------------------------------------------------------------------------------
 Version: 2.1.9
 Date: 02.01.2023
   Compatibility:
     - Fixed an issue with space exploration which caused the game to crash when landing a spaceship. Unfortunatly, due to the workings of space exploration, all combat robots will be removed upon landing. 
-
   Interfaces:
-    - Added a interface which returns the targetList. To get the list, use e.g. remote.call("combat-robot-overhaul", "get_targetList", surface_index = 1). Surface_index can be omitted to get hte list for all surfaces.
+    - Added a interface which returns the targetList. To get the list, use e.g. remote.call("combat-robot-overhaul", "get_targetList", surface_index = 1). Surface_index can be omitted to get the list for all surfaces.
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.8
 Date: 29.11.2022

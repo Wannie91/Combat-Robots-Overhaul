@@ -1,4 +1,5 @@
 local sounds = require("__base__/prototypes/entity/sounds")
+local item_sounds = require("__base__/prototypes/item_sounds")
 
 data:extend({
     {
@@ -6,7 +7,6 @@ data:extend({
         name = "defender-unit-capsule",
         icon = "__base__/graphics/icons/defender.png",
         icon_size = 64,
-        icon_mipmaps = 4,      
         capsule_action =
         {
             type = "throw",
@@ -58,13 +58,17 @@ data:extend({
         },
         subgroup = "capsule",
         order = "d[defender-unit-capsule]",
+        inventory_move_sound = item_sounds.grenade_inventory_move,
+        pick_sound = item_sounds.grenade_inventory_pickup,
+        drop_sound = item_sounds.grenade_inventory_move,
         stack_size = 100,
+        weight = 10*kg
     },
     {
         type = "capsule",
         name = "sentry-unit-capsule",
         icon = "__base__/graphics/icons/distractor.png",
-        icon_size = 64, icon_mipmaps = 4,
+        icon_size = 64,
         capsule_action = 
         {
             type = "throw",
@@ -75,12 +79,13 @@ data:extend({
                 ammo_category = "capsule",
                 projectile_creation_distance = 0.6,
                 cooldown = 30,
-                range = 20,
+                range = 25,
                 ammo_type = 
                 {
                     category = "capsule",
                     target_type = "position",
                     action = 
+                    
                     {
                         {
                             type = "direct",
@@ -132,14 +137,17 @@ data:extend({
         },
         subgroup = "capsule",
         order = "e[sentry-unit-capsule]",
+        inventory_move_sound = item_sounds.robotic_inventory_move,
+        pick_sound = item_sounds.robotic_inventory_pickup,
+        drop_sound = item_sounds.robotic_inventory_move,
         stack_size = 100,
+        weight = 20*kg
     },
     {
         type = "capsule",
         name = "destroyer-unit-capsule",
         icon = "__base__/graphics/icons/destroyer.png",
         icon_size = 64,
-        icon_mipmaps = 4,
         capsule_action = 
         {
             type = "throw",
@@ -191,7 +199,11 @@ data:extend({
             }
         },
         subgroup = "capsule",
-        order = "f[destroyer-unit-capsule]",
+        order = "f[destroyer-capsule]",
+        inventory_move_sound = item_sounds.robotic_inventory_move,
+        pick_sound = item_sounds.robotic_inventory_pickup,
+        drop_sound = item_sounds.robotic_inventory_move,
         stack_size = 100,
+        weight = 40*kg
     }
 })

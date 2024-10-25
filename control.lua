@@ -28,7 +28,7 @@ end
 
 local on_init = function() 
 
-    global.combatRobotsOverhaulData = global.combatRobotsOverhaulData or data
+    storage.combatRobotsOverhaulData = storage.combatRobotsOverhaulData or data
 
     if game.forces["player"].technologies["defender"].researched then 
         game.forces["player"].recipes["defender-unit"].enabled = true
@@ -42,9 +42,9 @@ end
 
 local on_load = function()
 
-    --copy data to or from global when game is saved / loaded
-    data = global.combatRobotsOverhaulData or data
-    global.combatRobotsOverhaulData = data 
+    --copy data to or from storage when game is saved / loaded
+    data = storage.combatRobotsOverhaulData or data
+    storage.combatRobotsOverhaulData = data 
 
     for _, defenderGroup in pairs(data.defenderGroups) do 
         setmetatable(defenderGroup, {__index = DefenderGroup})
@@ -94,10 +94,10 @@ local check_area_for_enemy_bases = function(event)
         data.targetList[event.surface_index] = {}
     end
 
-    for _, entity in pairs(game.get_surface(event.surface_index).find_entities_filtered({area = event.area, force = "enemy", type  = {"unit-spawner", "turret"}})) do 
-        if entity.active then 
+    for _, entity in pairs(game.get_surface(event.surface_index).find_entities_filtered({area = event.area, force = "enemy", type  = {"unit-spawner", "turret", "segmented", "segmented-unit", "spider-unit"}})) do 
+        if entity.active or ( entity.type == "segmented-unit" or entity.type == "segmented" ) then 
             data.targetList[event.surface_index][entity.unit_number] = entity
-            script.register_on_entity_destroyed(entity)
+            script.register_on_object_destroyed(entity)
         end
     end
 
@@ -106,7 +106,7 @@ end
 local entity_died = function(event)
 
     local entity = event.entity
-    if entity.force.name == "enemy" and (entity.type == "unit-spawner" or entity.type == "turret") then 
+    if entity.force.name == "enemy" and (entity.type == "unit-spawner" or entity.type == "turret" or entity.type == "segment" or entity.type == "segmented-unit" or entity.type == "spider-unit") then 
         if data.targetList[entity.surface.index] then 
             data.targetList[entity.surface.index][entity.unit_number] = nil 
         end
@@ -209,11 +209,10 @@ local created_entity = function(event)
             end
         end
 
-        entity.last_user = game.get_player(character_corpses[newest_corpse_index].character_corpse_player_index)
+        -- entity.last_user = game.get_player(character_corpses[newest_corpse_index].character_corpse_player_index)
 
     end
 
-    -- local player = game.get_player(entity.last_user and entity.last_user.index)
     local combatGroup = get_combatGroup(entity.name, entity.last_user.index, entity.surface.index)
 
     if not combatGroup then 
@@ -259,7 +258,7 @@ end
 
 local defend_base = function(event) 
 
-    if event.force.name == "enemy" and event.entity.has_flag("player-creation") and not data.defenceExcludeList[event.entity.name] and event.cause and event.cause.valid then 
+    if event.force.name == "enemy" and event.entity.has_flag("player-creation") and not data.defenceExcludeList[event.entity.name] and event.cause and event.cause.valid then
         for _, defenderGroup in pairs(data.defenderGroups) do
             defenderGroup:defend_base(event.cause)
         end
@@ -268,7 +267,7 @@ local defend_base = function(event)
 end
 
 local on_tick = function()
-    
+
     for _, defenderGroup in pairs(data.defenderGroups) do 
         defenderGroup:update()
     end
@@ -282,7 +281,7 @@ end
 script.on_init(on_init)
 script.on_load(on_load)
 
-script.on_configuration_changed(configuration_changed)
+-- script.on_configuration_changed(configuration_changed)
 script.on_event(defines.events.on_runtime_mod_setting_changed, modsettings_changed)
 
 script.on_event(defines.events.on_chunk_charted, check_area_for_enemy_bases)
@@ -294,7 +293,7 @@ script.on_event(defines.events.on_player_mined_entity, entity_mined, modDefines.
 script.on_event(defines.events.on_player_used_capsule, player_used_capsule)
 
 script.on_event(defines.events.on_entity_died, entity_died)
-script.on_event(defines.events.on_entity_destroyed, entity_destroyed)
+script.on_event(defines.events.on_object_destroyed, entity_destroyed)
 script.on_event(defines.events.script_raised_built, created_entity, modDefines.eventFilters)
 script.on_event(defines.events.on_trigger_created_entity, created_entity)
 script.on_event(defines.events.on_entity_damaged, defend_base)

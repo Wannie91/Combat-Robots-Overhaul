@@ -112,7 +112,7 @@ end
 function BaseGroup:search_for_enemy_near_position(position, radius)
 
     local search_area = {{self.group_position.x - radius, self.group_position.y - radius}, {self.group_position.x + radius, self.group_position.y + radius}}
-    local enemies = self.surface.find_entities_filtered({area = search_area, type = {"unit", "turret", "unit-spawner"}, force = "enemy"})
+    local enemies = self.surface.find_entities_filtered({area = search_area, type = {"unit", "turret", "unit-spawner", "segment", "segmented-unit", "spider-unit"}, force = "enemy"})
 
     for _, enemy in pairs(enemies) do 
         if self:valid_entity(enemy) then 

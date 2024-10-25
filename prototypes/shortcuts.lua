@@ -14,37 +14,10 @@ data:extend({
         technology_to_unlock = "defender",
         associated_control_input = "defend-player",
         toggleable = true,
-        icon = 
-        {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x32.png",
-            flags = {"icon"},
-            priority = "extra-high-no-scale",
-            scale = 1,
-            size = 32
-        },
-        small_icon = 
-        {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x24.png",
-            flags = {"icon"},
-            priority = "extra-high-no-scale",
-            scale = 1,
-            size = 24,
-        },
-        disabled_icon = 
-        {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x32-white.png",
-            flags = {"icon"},
-            priority = "extra-high-no-scale",
-            scale = 1,
-            size = 32,
-        },
-        disabled_small_icon = 
-        {
-            filename = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x24-white.png",
-            flags = {"icon"},
-            priority = "extra-high-no-scale",
-            scale = 1,
-            size = 24
-        },
+        icon = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x32.png",
+        icon_size = 32,
+        small_icon = "__CombatRobotsOverhaul__/graphics/icons/defend-player-x24.png",
+        small_icon_size = 24,
+        unavailable_until_unlocked = true,
     },
 })

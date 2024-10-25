@@ -60,7 +60,7 @@ local equipment =
         },
         energy_source = 
         {
-            type = "void",
+            type = "electric",
             usage_priority = "primary-input",
         },
         automatic = true,
@@ -73,9 +73,9 @@ local equipment =
             projectile_creation_distance = 0.6,
             range = 15,
             sound = sounds.defender_gunshot,
+            ammo_category = "bullet",
             ammo_type = 
             {
-                category = "bullet",
                 action = 
                 {
                     type = "direct",
@@ -142,7 +142,7 @@ local equipment =
         },
         energy_source = 
         {
-            type = "void",
+            type = "electric",
             usage_priority = "primary-input",
         },
         automatic = true,
@@ -152,8 +152,9 @@ local equipment =
             ammo_category = "beam",
             cooldown = 20,
             cooldown_deviation = 0.2,
+            damage_modifier = 2,
             range = 20,
-            sound = make_laser_sounds(),
+            -- sound = make_laser_sounds(),
             ammo_type = 
             {
                 category = "beam",
@@ -164,7 +165,7 @@ local equipment =
                     {
                         type = "beam",
                         beam = "electric-beam",
-                        max_length = 20,
+                        max_length = 25,
                         duration = 20,
                         source_offset = { 0.15, -0.5 }
                     }
@@ -183,7 +184,7 @@ local guns =
     icon_size = 64,
     icon_mipmaps = 4,
     subgroup = "gun",
-    flags = {"hidden"},
+    hidden = true,
     order = "h[combatrobot]-a[defender-unit-gun]",
     stack_size = 1,
     attack_parameters = 
@@ -233,7 +234,7 @@ local items =
         name = "defender-unit",
         icon_size = 32,
         icon = "__base__/graphics/icons/defender.png",
-        flags = {"hidden"},
+        hidden = true,
         order = "i[combatrobot]",
         subgroup = "capsule",
         place_result = "defender-unit",
@@ -244,7 +245,7 @@ local items =
         name = "sentry-unit",
         icon_size = 32, 
         icon = "__base__/graphics/icons/distractor.png",
-        flags = {"hidden"},
+        hidden = true,
         order = "j[combatrobot]",
         subgroup = "capsule",
         place_result = "sentry-unit",
@@ -255,7 +256,7 @@ local items =
         name = "destroyer-unit",
         icon = "__base__/graphics/icons/destroyer.png",
         icon_size = 32,
-        flags = {"hidden"},
+        hidden = true,
         order = "h[combatrobot]",
         subgroup = "capsule",
         place_result = "destroyer-unit",
@@ -268,7 +269,7 @@ data:extend({
     item_category,
     combat_grid,
     -- guns,
-    equipment_category
+    -- equipment_category
 })
 
 data:extend(equipment, items) 

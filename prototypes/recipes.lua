@@ -3,41 +3,47 @@ data:extend(
     {
         type = "recipe",
         name = "defender-unit",
-        enabled = "false",
+        enabled = false,
         energy_required = 15,
         ingredients = 
         {
-            {"iron-plate", 5},
-            {"copper-plate", 5},
-            {"electronic-circuit", 3},
+            { type = "item", name = "iron-plate", amount = 5 },
+            { type = "item", name = "copper-plate", amount = 5 },
+            { type = "item", name = "electronic-circuit", amount = 3 }
         },
-        result = "defender-unit-capsule",
+        results = {
+            { type = "item", name = "defender-unit-capsule", amount = 1 }
+        }
     },
     {
         type = "recipe",
         name = "sentry-unit",
-        enabled = "false",
+        enabled = false,
         energy_required = 15,
         ingredients = 
         {
-            {"copper-plate", 5},
-            {"iron-plate", 5},
-            {"iron-gear-wheel", 5},
+            { type = "item", name = "copper-plate", amount = 5 },
+            { type = "item", name = "iron-plate", amount = 5 },
+            { type = "item", name = "iron-gear-wheel", amount = 3 }
         },
-        result = "sentry-unit-capsule",
+        results = {
+            { type = "item", name = "sentry-unit-capsule", amount = 1 }
+        }
     },
     {
         type = "recipe",
         name = "destroyer-unit",
-        enabled = "false",
+        enabled = false,
         energy_required = 15,
         ingredients = 
         {
-            {"steel-plate", 10},
-            {"copper-plate", 5},
-            {"iron-gear-wheel", 5},
-            {"electronic-circuit", 5},
+            { type = "item", name = "steel-plate", amount = 5 },
+            { type = "item", name = "copper-plate", amount = 5 },
+            { type = "item", name = "iron-gear-wheel", amount = 3 },
+            { type = "item", name = "electronic-circuit", amount = 5 }
         },
-        result = "destroyer-unit-capsule"
-    },
+        results = {
+            { type = "item", name = "destroyer-unit-capsule", amount = 1 }
+        }
+    }
 })

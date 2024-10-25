@@ -1,9 +1,7 @@
-local collision_mask_util = require("__core__/lualib/collision-mask-util.lua")
 local hit_effects = require("__base__/prototypes/entity/hit-effects")
 local sounds = require("__base__/prototypes/entity/sounds")
 local animations = require("animations")
-local layer = collision_mask_util.get_first_unused_layer()
-
+local simulations = require("__base__.prototypes.factoriopedia-simulations")
 
 local equipment_category = 
 {
@@ -21,12 +19,21 @@ local spider_leg =
     minimal_step_size = 0,
     movement_acceleration = 100,
     movement_based_position_selection_distance = 3,
+    base_position_selection_distance = 1,
+    knee_distance_factor = 1,
+    knee_height = 0,
+    hip_flexibility = 0,
+    stretch_force_scalar = 1,
     part_length = 100000000,
     target_position_randomisation_distance = 0,
     walking_sound_volume_modifier = 0,
     working_sound = nil,
     collision_box = {{-0.5, -0.5}, {0.5, 0.5}}, 
-    collision_mask = {layer},
+    collision_mask = {
+        layers = {},
+        not_colliding_with_itself = true,
+      },
+    
 }
 
 local defender_unit = 
@@ -34,14 +41,18 @@ local defender_unit =
     type = "spider-vehicle",
     name = "defender-unit",
     icon = "__base__/graphics/icons/defender.png",
-    icon_size = 64, 
-    icon_mipmaps = 4,
+    -- icon_size = 64, 
+    -- icon_mipmaps = 4,
     flags = {"placeable-player", "player-creation", "placeable-off-grid"},
     minable = {mining_time = 0.5, result = "defender-unit-capsule"},
     placeable_by = {item = "defender-unit-capsule", count = 1},
-    collision_mask = {layer},
+    collision_mask = {
+        layers = {},
+        not_colliding_with_itself = true,
+      },
     subgroup = "capsule",
     order = "e-b-a",
+    factoriopedia_simulation = simulations.factoriopedia_defender,
 
     max_health = 80,
     height = 1, 
@@ -50,7 +61,7 @@ local defender_unit =
     equipment_grid = "combat-unit-equipment-grid",
     inventory_size = 0,
     chunk_exploration_radius = 2,
-    movement_energy_consumption = "1KW",
+    movement_energy_consumption = "1kW",
     braking_force = 1,
     friction_force = 1,
     energy_per_hit_point = 1,
@@ -60,6 +71,7 @@ local defender_unit =
     chain_shooting_cooldown_modifier = 0.5,
     alert_when_damaged = false,
     allow_passengers = false,
+
 
     torso_rotation_speed = 0.05,
     graphics_set = animations.defender_unit,
@@ -80,6 +92,7 @@ local defender_unit =
                 mount_position = {0, -1},
                 ground_position = {0, -1},
                 blocking_legs = {1},
+                walking_group = 1,
                 leg_hit_the_ground_trigger = nil,
             }
         },
@@ -90,7 +103,7 @@ local defender_unit =
     -- corpse = "defender-remnants",
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
-
+    is_military_target = true,
     resistances = 
     {
         {
@@ -101,7 +114,7 @@ local defender_unit =
         {
             type = "acid",
             decrease = 0,
-            percent = 95,
+            percent = 80,
         }
     },
 
@@ -142,31 +155,35 @@ local sentry_unit =
     type = "unit",
     name = "sentry-unit",
     icon = "__base__/graphics/icons/distractor.png",
-    icon_size = 64, icon_mipmaps = 4,
+    -- icon_size = 64, icon_mipmaps = 4,
     flags = {"placeable-player", "player-creation", "placeable-off-grid"},
     minable = { mining_time = 0.5, result = "sentry-unit-capsule"},
     placeable_by = {item = "sentry-unit-capsule", count = 1},
     subgroup = "capsule",
     order = "e-b-b",
-
-    max_health = 100, 
+    factoriopedia_simulation = simulations.factoriopedia_distractor,
+    
+    max_health = 180, 
     vision_distance = 45,
     radar_range = 1,
     movement_speed = 0.2,
 
+    
     has_belt_immunity = true,
     alert_when_damaged = true,
-    pollution_to_join_attack = 0,
+    absorptions_to_join_attack = { },
     distraction_cooldown = 300,
     min_pursue_time = 10 * 60,
     max_pursue_distance = 50,
-
     collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
     selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
     hit_visualization_box = {{-0.1, -1.1}, {0.1, -1.0}},
     sticker_box = {{-0.1, -0.1}, {0.1, 0.1}},
     friendly_map_color = {0, 100, 0},
-    collision_mask = {layer},
+    collision_mask = {
+        layers = {},
+        not_colliding_with_itself = true,
+      },
     dying_explosion = "distractor-robot-explosion",
     distance_per_frame = 0.1,
     water_reflection = robot_reflection(1.2),
@@ -182,7 +199,7 @@ local sentry_unit =
         {
             type = "acid",
             decrease = 0,
-            percent = 95
+            percent = 85
         }
     },
 
@@ -214,7 +231,7 @@ local sentry_unit =
         {
             layers = 
             {
-                animations.sentry_unit_idle,
+                animations.sentry_unit.idle,
                 animations.sentry_unit.shadow_idle
             }
         }
@@ -252,13 +269,14 @@ local destroyer_unit =
     type = "spider-vehicle",
     name = "destroyer-unit",
     icon = "__base__/graphics/icons/destroyer.png",
-    icon_size = 64, 
-    icon_mipmaps = 4,
+    -- icon_size = 64, 
+    -- icon_mipmaps = 4,
     flags = {"placeable-player", "player-creation", "placeable-off-grid"},
     minable = {mining_time = 0.5, result = "destroyer-unit-capsule"},
     placeable_by = {item = "destroyer-unit-capsule", count = 1},
     subgroup = "capsule",
     order = "e-b-a",
+    factoriopedia_simulation = simulations.factoriopedia_destroyer,
 
     max_health = 80,
     height = 1, 
@@ -267,7 +285,7 @@ local destroyer_unit =
     equipment_grid = "combat-unit-equipment-grid",
     inventory_size = 0,
     chunk_exploration_radius = 2,
-    movement_energy_consumption = "20KW",
+    movement_energy_consumption = "20kW",
     braking_force = 1,
     friction_force = 1,
     energy_per_hit_point = 1,
@@ -277,6 +295,7 @@ local destroyer_unit =
     alert_when_damaged = false,
     allow_passengers = false,
 
+
     torso_rotation_speed = 0.05,
     graphics_set = animations.destroyer_unit,
     collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
@@ -284,7 +303,10 @@ local destroyer_unit =
     hit_visualization_box = {{-0.1, -1.1}, {0.1, -1.0}},
     friendly_map_color = {0, 200, 0},
     sticker_box = {{-0.1, -0.1}, {0.1, 0.1}},
-    collision_mask = {layer},
+    collision_mask = {
+        layers = {},
+        not_colliding_with_itself = true,
+      },
     
     spider_engine = 
     {
@@ -295,6 +317,7 @@ local destroyer_unit =
                 mount_position = {0,0},
                 ground_position = {0,0},
                 blocking_legs = {1},
+                walking_group = 1,
                 leg_hit_the_ground_trigger = nil,
             }
         },
@@ -305,7 +328,8 @@ local destroyer_unit =
     -- corpse = "destroyer-remnants",
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
-
+    is_military_target = true,
+    
     resistances = 
     {
         {
@@ -316,7 +340,7 @@ local destroyer_unit =
         {
             type = "acid",
             decrease = 0,
-            percent = 95,
+            percent = 90,
         }
     },
 
