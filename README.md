@@ -30,4 +30,4 @@ Defender Distance = Social distancing of defender units while following the play
 Time before Attack = How long destroyer units wait after being created until they start their attack (Default: 10 Seconds)
 
 ## Known Issues
-
+Sentry Units can't be placed remotly due their entity type.
