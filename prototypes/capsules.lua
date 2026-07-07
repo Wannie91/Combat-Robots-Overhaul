@@ -5,8 +5,9 @@ data:extend({
     {
         type = "capsule",
         name = "defender-unit-capsule",
-        icon = "__base__/graphics/icons/defender.png",
+        icon = "__base__/graphics/icons/defender-capsule.png",
         icon_size = 64,
+        place_result = "defender-unit",
         capsule_action =
         {
             type = "throw",
@@ -28,13 +29,6 @@ data:extend({
                             type = "direct",
                             action_delivery = 
                             {
-                                -- type = "instant",
-                                -- target_effects = 
-                                -- {
-                                --     type = "damage",
-                                --     show_in_tooltip = false,
-                                --     damage = {type = "physical", amount = 0}
-                                -- }
                                 type = "projectile",
                                 projectile = "defender-unit-capsule",
                                 starting_speed = 0.3
@@ -57,7 +51,8 @@ data:extend({
             }
         },
         subgroup = "capsule",
-        order = "d[defender-unit-capsule]",
+        -- order = "d[defender-unit-capsule]",
+        order = "d-a",
         inventory_move_sound = item_sounds.grenade_inventory_move,
         pick_sound = item_sounds.grenade_inventory_pickup,
         drop_sound = item_sounds.grenade_inventory_move,
@@ -67,8 +62,10 @@ data:extend({
     {
         type = "capsule",
         name = "sentry-unit-capsule",
-        icon = "__base__/graphics/icons/distractor.png",
+        icon = "__base__/graphics/icons/distractor-capsule.png",
         icon_size = 64,
+        -- hidden_in_factoriopedia = true,
+        place_result = "sentry-unit",
         capsule_action = 
         {
             type = "throw",
@@ -146,8 +143,10 @@ data:extend({
     {
         type = "capsule",
         name = "destroyer-unit-capsule",
-        icon = "__base__/graphics/icons/destroyer.png",
+        icon = "__base__/graphics/icons/destroyer-capsule.png",
         icon_size = 64,
+        -- hidden_in_factoriopedia = true,
+        place_result = "destroyer-unit",
         capsule_action = 
         {
             type = "throw",

@@ -1,7 +1,40 @@
 local hit_effects = require("__base__/prototypes/entity/hit-effects")
 local sounds = require("__base__/prototypes/entity/sounds")
 local animations = require("animations")
-local simulations = require("__base__.prototypes.factoriopedia-simulations")
+local simulations = require("__base__/prototypes/factoriopedia-simulations")
+
+local smoke_animations = require("__base__/prototypes/entity/smoke-animations")
+local smoke_fast_animation = smoke_animations.trivial_smoke_fast
+local trivial_smoke = smoke_animations.trivial_smoke
+
+local simulations =
+{
+    sentry_unit =
+    {
+        init =
+        [[
+            game.simulation.camera_position = {0, -1}
+            game.surfaces[1].create_entity{name = "sentry-unit", position = {0,0}}
+        ]]
+    },
+    defender_unit =
+    {
+        init =
+        [[
+            game.simulation.camera_position = {0, -1}
+            game.surfaces[1].create_entity{name = "destroyer-unit", position = {0,0}}
+        ]]
+    },
+
+    destroyer_unit =
+    {
+        init =
+        [[
+            game.simulation.camera_position = {0, -1}
+            game.surfaces[1].create_entity{name = "destroyer-unit", position = {0,0}}
+        ]]
+    }
+}
 
 local equipment_category = 
 {
@@ -9,12 +42,40 @@ local equipment_category =
     name = "combat-unit-category",
 }
 
+local smoke_test = 
+{
+    type = "trivial-smoke",
+    name = "smoke-test",
+    render_layer = "smoke",
+    animation =
+    {
+        filename = "__core__/graphics/empty.png",
+        frame_count = 1,
+        animation_speed = 1,
+        repeat_count = 1,
+        size = 1,
+        scale = 1,
+    },
+    duration = 1,
+    cyclic = true,
+}
+
 local spider_leg = 
 {
     type = "spider-leg",
     name = "combat-leg",
+    icon = "__base__/graphics/icons/defender.png",
+    icon_size = 64, 
+    flags = {"placeable-player", "placeable-enemy", "player-creation", "placeable-off-grid", "breaths-air", "not-blueprintable"},
     selectable_in_game = false,
-    graphics_set = create_spidertron_leg_graphics_set(0,1),
+    -- graphics_set = 
+    -- {
+    --     joint_turn_offset = 0,
+    --     joint_render_layer = "zero",
+
+    -- },
+   
+    graphics_set = nil,
     initial_movement_speed = 100,
     minimal_step_size = 0,
     movement_acceleration = 100,
@@ -28,12 +89,26 @@ local spider_leg =
     target_position_randomisation_distance = 0,
     walking_sound_volume_modifier = 0,
     working_sound = nil,
-    collision_box = {{-0.5, -0.5}, {0.5, 0.5}}, 
+    collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
+    sticker_box = {{-0.1, -0.1}, {0.1, 0.1}},
     collision_mask = {
         layers = {},
         not_colliding_with_itself = true,
-      },
-    
+    },
+    is_military_target = true,
+    hidden = true,
+    alert_when_damaged = false,
+    allow_copy_paste = false,
+    created_smoke = { 
+        type = "create-trivial-smoke", 
+        smoke_name = "smoke-test",
+        repeat_count = 1,
+        animation_speed = 1,
+        offset_deviation = {{-0.2, -0.2}, {0.2, 0.2}},
+        speed_from_center = 0.03
+    },
+    friendly_map_color = {0, 0, 0, 0},
+    enemy_map_color = {0, 0, 0, 0},
 }
 
 local defender_unit = 
@@ -41,46 +116,44 @@ local defender_unit =
     type = "spider-vehicle",
     name = "defender-unit",
     icon = "__base__/graphics/icons/defender.png",
-    -- icon_size = 64, 
-    -- icon_mipmaps = 4,
-    flags = {"placeable-player", "player-creation", "placeable-off-grid"},
+    icon_size = 64, 
+    icon_mipmaps = 4,
+    flags = { "placeable-neutral", "player-creation", "placeable-off-grid"},
     minable = {mining_time = 0.5, result = "defender-unit-capsule"},
-    placeable_by = {item = "defender-unit-capsule", count = 1},
+    placeable_by = {{item = "defender-unit-capsule", count = 1},{item = "defender-unit", count = 1}},
     collision_mask = {
         layers = {},
         not_colliding_with_itself = true,
-      },
+    },
+    trigger_target_mask = { "flying-robot"},
     subgroup = "capsule",
     order = "e-b-a",
-    factoriopedia_simulation = simulations.factoriopedia_defender,
 
     max_health = 80,
     height = 1, 
     weight = 1,
     energy_source = {type = "void"},
-    equipment_grid = "combat-unit-equipment-grid",
     inventory_size = 0,
     chunk_exploration_radius = 2,
     movement_energy_consumption = "1kW",
     braking_force = 1,
     friction_force = 1,
     energy_per_hit_point = 1,
-    -- guns = { "defender-unit-gun" },
-
+    guns = { "defender-unit-gun" },
+    allow_copy_paste = false,
     automatic_weapon_cycling = false, 
     chain_shooting_cooldown_modifier = 0.5,
-    alert_when_damaged = false,
+    alert_when_damaged = true,
     allow_passengers = false,
-
-
+    create_ghost_on_death  = false,
     torso_rotation_speed = 0.05,
     graphics_set = animations.defender_unit,
     collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
     selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
     drawing_box = {{-0.5, -0.5}, {0.5, 0.5}},
     hit_visualization_box = {{-0.1, -1.1}, {0.1, -1.0}},
-    friendly_map_color = {0, 128, 0, 1},
-    map_color = {0, 128, 0, 1},
+    -- friendly_map_color = {0, 128, 0, 1},
+    -- map_color = {0, 128, 0, 1},
     sticker_box = {{-0.1, -0.1}, {0.1, 0.1}},
 
     spider_engine = 
@@ -93,14 +166,14 @@ local defender_unit =
                 ground_position = {0, -1},
                 blocking_legs = {1},
                 walking_group = 1,
-                leg_hit_the_ground_trigger = nil,
+                leg_hit_the_ground_trigger = get_leg_hit_the_ground_trigger(),
             }
         },
-        military_target = "spidertron-military-target",
     },
 
     dying_explosion = "defender-robot-explosion",
-    -- corpse = "defender-remnants",
+    corpse = "defender-remnants",
+    allow_remote_driving = false,
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
     is_military_target = true,
@@ -140,56 +213,100 @@ local defender_unit =
     
     sound_minimum_speed = 0.1,
     sound_scaling_ratio = 0.1,
+    created_smoke = { 
+        type = "create-trivial-smoke", 
+        smoke_name = "smoke-test",
+        repeat_count = 1,
+        animation_speed = 1,
+        offset_deviation = {{-0.2, -0.2}, {0.2, 0.2}},
+        speed_from_center = 0.03
+    },
 }
 
 defender_unit.graphics_set.render_layer = "air-entity-info-icon"
 defender_unit.graphics_set.base_render_layer = "air-object"
-defender_unit.graphics_set.autopilot_path_visualisation_line_width = 0
-defender_unit.graphics_set.autopilot_path_visualisation_on_map_line_width = 0
+defender_unit.graphics_set.autopilot_path_visualisation_line_width = 0.0
+defender_unit.graphics_set.autopilot_path_visualisation_on_map_line_width = 1 / 100000
+defender_unit.graphics_set.autopilot_destination_visualisation_render_layer = "zero"
 defender_unit.graphics_set.autopilot_destination_visualisation = util.empty_sprite()
 defender_unit.graphics_set.autopilot_destination_queue_on_map_visualisation = util.empty_sprite()
 defender_unit.graphics_set.autopilot_destination_on_map_visualisation = util.empty_sprite()
 
-local sentry_unit = 
+local sentry_unit =
 {
-    type = "unit",
+    type = "spider-unit",
     name = "sentry-unit",
     icon = "__base__/graphics/icons/distractor.png",
-    -- icon_size = 64, icon_mipmaps = 4,
+    icon_size = 64,
+
     flags = {"placeable-player", "player-creation", "placeable-off-grid"},
-    minable = { mining_time = 0.5, result = "sentry-unit-capsule"},
-    placeable_by = {item = "sentry-unit-capsule", count = 1},
+    minable = {mining_time = 0.5, result = "sentry-unit-capsule", count = 1},
+    mined_sound = sounds.deconstruct_small(0.8),
+    placeable_by = {{item = "sentry-unit-capsule", count = 1},{item = "sentry-unit", count = 1}},
     subgroup = "capsule",
     order = "e-b-b",
-    factoriopedia_simulation = simulations.factoriopedia_distractor,
-    
-    max_health = 180, 
+    factoriopedia_simulation = simulations.sentry_unit,
+    factoriopedia_description = {"factoriopedia-description.sentry-unit"},
+
+    max_health = 180,
+    height = 1,
     vision_distance = 45,
     radar_range = 1,
-    movement_speed = 0.2,
-
-    
-    has_belt_immunity = true,
+    create_ghost_on_death = false,
     alert_when_damaged = true,
-    absorptions_to_join_attack = { },
-    distraction_cooldown = 300,
+    absorptions_to_join_attack = {},
+    distraction_cooldown = 10,
     min_pursue_time = 10 * 60,
     max_pursue_distance = 50,
+    -- friendly_map_color = {0, 100, 0},
+    -- enemy_map_color = {100, 0, 0},
+    
+    graphics_set = animations.sentry_unit,
     collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
     selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
     hit_visualization_box = {{-0.1, -1.1}, {0.1, -1.0}},
     sticker_box = {{-0.1, -0.1}, {0.1, 0.1}},
-    friendly_map_color = {0, 100, 0},
-    collision_mask = {
-        layers = {},
-        not_colliding_with_itself = true,
-      },
+    trigger_target_mask = { "flying-robot"},
     dying_explosion = "distractor-robot-explosion",
+    torso_rotation_speed = 0.05,
     distance_per_frame = 0.1,
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
-
-    resistances = 
+    is_military_target = true,
+    collision_mask =
+    {
+        layers = {},
+        not_colliding_with_itself = true,
+    },
+    spider_engine =
+    {
+        legs =
+        {
+            {
+                leg = "combat-leg",
+                mount_position = {0,0},
+                ground_position = {0,0},
+                blocking_legs = {1},
+                walking_group = 1,
+                leg_hit_the_ground_trigger = nil,
+            }
+        },
+    },
+    ai_settings =
+    {
+        do_seperation = false,
+        strafe_settings =
+        {
+            max_distance = 20,
+            ideal_distance = 15,
+            ideal_distance_tolerance = 2.5,
+            ideal_distance_variance = 1,
+            ideal_distance_importance = 0.25,
+            ideal_distance_importance_variance = 0.1,
+            face_target = true
+        }
+    },
+    resistances =
     {
         {
             type = "fire",
@@ -202,8 +319,7 @@ local sentry_unit =
             percent = 85
         }
     },
-
-    attack_parameters = 
+    attack_parameters =
     {
         type = "beam",
         ammo_category = "laser",
@@ -211,57 +327,34 @@ local sentry_unit =
         cooldown_deviation = 0.2,
         damage_modifier = 0.5,
         range = 15,
+        range_mode = "center-to-bounding-box",
         sound = make_laser_sounds(),
-        ammo_type = 
+        ammo_type =
         {
-            category = "laser",
             action =
             {
                 type = "direct",
-                action_delivery = 
+                action_delivery =
                 {
                     type = "beam",
                     beam = "laser-beam",
-                    max_length = 20,
-                    duration = 10,
+                    max_length = 15,
+                    duration = 20,
                 }
-            } 
-        },
-        animation = 
-        {
-            layers = 
-            {
-                animations.sentry_unit.idle,
-                animations.sentry_unit.shadow_idle
             }
         }
     },
-
-    working_sound = 
-    {
-        sound = 
-        {
-            filename = "__base__/sound/fight/distractor-robot-loop.ogg",
-            volume = 0.7
-        },
-        apparent_volume = 1,
-        persistent = true
+    repairing_sound = sound_variations("__base__/sound/robot-repair", 6, 0.6),
+    created_smoke = { 
+        type = "create-trivial-smoke", 
+        smoke_name = "smoke-test",
+        repeat_count = 1,
+        animation_speed = 1,
+        offset_deviation = {{-0.2, -0.2}, {0.2, 0.2}},
+        speed_from_center = 0.03
     },
-
-    dying_trigger_effect = 
-    {
-        type = "create-entity",
-        entity_name = "distractor-robot-explosion"
-    },
-
-    run_animation = 
-    {
-        layers = 
-        {
-            animations.sentry_unit.in_motion,
-            animations.sentry_unit.shadow_in_motion
-        }
-    },
+    -- friendly_map_color = {0, 100, 0},
+    -- enemy_map_color = {100, 0, 0},
 }
 
 local destroyer_unit = 
@@ -269,45 +362,45 @@ local destroyer_unit =
     type = "spider-vehicle",
     name = "destroyer-unit",
     icon = "__base__/graphics/icons/destroyer.png",
-    -- icon_size = 64, 
-    -- icon_mipmaps = 4,
+    icon_size = 64, 
+    icon_mipmaps = 4,
     flags = {"placeable-player", "player-creation", "placeable-off-grid"},
     minable = {mining_time = 0.5, result = "destroyer-unit-capsule"},
-    placeable_by = {item = "destroyer-unit-capsule", count = 1},
+    placeable_by = {{item="destroyer-unit-capsule", count = 1}, {item="destroyer-unit", count = 1}},
     subgroup = "capsule",
-    order = "e-b-a",
-    factoriopedia_simulation = simulations.factoriopedia_destroyer,
-
+    order = "e-b-c",
+    factoriopedia_simulation = simulations.factoriopedia_distractor,
+    allow_remote_driving = false,
     max_health = 80,
     height = 1, 
     weight = 1,
+    create_ghost_on_death  = false,
     energy_source = {type = "void"},
-    equipment_grid = "combat-unit-equipment-grid",
     inventory_size = 0,
     chunk_exploration_radius = 2,
     movement_energy_consumption = "20kW",
     braking_force = 1,
     friction_force = 1,
     energy_per_hit_point = 1,
+    guns = { "destroyer-unit-gun"},
 
     automatic_weapon_cycling = false, 
     chain_shooting_cooldown_modifier = 0.5,
-    alert_when_damaged = false,
+    alert_when_damaged = true,
     allow_passengers = false,
-
 
     torso_rotation_speed = 0.05,
     graphics_set = animations.destroyer_unit,
     collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
     selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
     hit_visualization_box = {{-0.1, -1.1}, {0.1, -1.0}},
-    friendly_map_color = {0, 200, 0},
     sticker_box = {{-0.1, -0.1}, {0.1, 0.1}},
     collision_mask = {
         layers = {},
         not_colliding_with_itself = true,
       },
-    
+    trigger_target_mask = { "flying-robot"},
+    allow_copy_paste = false,
     spider_engine = 
     {
         legs = 
@@ -321,11 +414,9 @@ local destroyer_unit =
                 leg_hit_the_ground_trigger = nil,
             }
         },
-        military_target = "spidertron-military-target",
     },
 
     dying_explosion = "destroyer-robot-explosion",
-    -- corpse = "destroyer-remnants",
     water_reflection = robot_reflection(1.2),
     damaged_trigger_effect = hit_effects.flying_robot(),
     is_military_target = true,
@@ -342,6 +433,15 @@ local destroyer_unit =
             decrease = 0,
             percent = 90,
         }
+    },
+    created_smoke = 
+    { 
+        type = "create-trivial-smoke", 
+        smoke_name = "smoke-test",
+        repeat_count = 1,
+        animation_speed = 1,
+        offset_deviation = {{-0.2, -0.2}, {0.2, 0.2}},
+        speed_from_center = 0.03
     },
 
     working_sound = 
@@ -372,7 +472,8 @@ local destroyer_unit =
 destroyer_unit.graphics_set.render_layer = "air-entity-info-icon"
 destroyer_unit.graphics_set.base_render_layer = "air-object"
 destroyer_unit.graphics_set.autopilot_path_visualisation_line_width = 0
-destroyer_unit.graphics_set.autopilot_path_visualisation_on_map_line_width = 0
+-- destroyer_unit.graphics_set.autopilot_destination_visualisation_render_layer = "zero"
+destroyer_unit.graphics_set.autopilot_path_visualisation_on_map_line_width = 1 / 100000
 destroyer_unit.graphics_set.autopilot_destination_visualisation = util.empty_sprite()
 destroyer_unit.graphics_set.autopilot_destination_queue_on_map_visualisation = util.empty_sprite()
 destroyer_unit.graphics_set.autopilot_destination_on_map_visualisation = util.empty_sprite()
@@ -397,6 +498,7 @@ animations.make_robot_particle(sentry_unit)
 animations.make_robot_particle(destroyer_unit)
 
 data:extend({
+    smoke_test,
     equipment_category,
     spider_leg,
     defender_unit,

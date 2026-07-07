@@ -26,7 +26,6 @@ data:extend({
                 {
                     type = "create-entity",
                     entity_name = "defender-unit",
-                    -- tile_collision_mask = {"layer-19"},
                     offset_deviation = {{-1.0, -1.0},{1.0, 1.0}},
                     show_in_tooltip = false,
                     trigger_created_entity = true,
@@ -85,7 +84,6 @@ data:extend({
                     {
                         type = "create-entity",
                         entity_name = "sentry-unit",
-                        -- tile_collision_mask = {"layer-19"},
                         offset_deviation = {{-1.0, -1.0},{1.0, 1.0}},
                         show_in_tooltip = true,
                         trigger_created_entity = true
@@ -144,7 +142,6 @@ data:extend({
                 {
                     type = "create-entity",
                     entity_name = "destroyer-unit",
-                    -- tile_collision_mask = {"layer-19"},
                     offset_deviation = {{-1.0, -1.0},{1.0, 1.0}},
                     show_in_tooltip = false,
                     trigger_created_entity = true

@@ -25,6 +25,8 @@ end
 
 function DestroyerGroup:update(targetList)
 
+    if not self:has_members() then return end
+
     self:get_group_position()
    
     if not self:ready_for_attack() then return end 
@@ -36,9 +38,9 @@ function DestroyerGroup:update(targetList)
         self:search_for_enemy_near_position(self.group_position, 32)
     end
 
-    if was_attacking and self.is_attacking then return end 
+    if was_attacking and self.is_attacking then return end
 
-    if next(targetList[self.surface.index]) and self:has_members() then 
+    if next(targetList[self.surface.index]) and self:has_members() then
 
         local target_entity = self.surface.get_closest(self.group_position, targetList[self.surface.index])
 
@@ -57,6 +59,8 @@ function DestroyerGroup:update(targetList)
         if self.is_moving and (util.get_distance(self.group_position, self.current_target.position)) <= 48 then 
             self:search_for_enemy_near_position(self.group_position, 48)
         end
+
+
     end
 
 end

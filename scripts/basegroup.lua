@@ -6,6 +6,7 @@ function BaseGroup:new(player)
     local basegroup = 
     {
         player = player,
+        force = player.force,
         surface = player.surface,
         members = {},
         group_position = {x = 0, y = 0},
@@ -83,7 +84,7 @@ end
 
 function BaseGroup:valid_entity(entity)
 
-    if entity and entity.valid and entity.surface.index == self.surface.index then 
+    if entity and entity.valid and entity.surface.index == self.surface.index then
         return true 
     end
 
@@ -91,7 +92,9 @@ function BaseGroup:valid_entity(entity)
 
 end
 
-function BaseGroup:move_to_target(target) 
+function BaseGroup:move_to_target(target)
+
+    if not target then return end
 
     for _, member in pairs(self.members) do 
 
@@ -112,12 +115,14 @@ end
 function BaseGroup:search_for_enemy_near_position(position, radius)
 
     local search_area = {{self.group_position.x - radius, self.group_position.y - radius}, {self.group_position.x + radius, self.group_position.y + radius}}
-    local enemies = self.surface.find_entities_filtered({area = search_area, type = {"unit", "turret", "unit-spawner", "segment", "segmented-unit", "spider-unit"}, force = "enemy"})
+    local enemies = self.surface.find_entities_filtered({area = search_area, type = {"unit", "turret", "unit-spawner", "segmented-unit", "spider-unit"}, force = "enemy"})
 
-    for _, enemy in pairs(enemies) do 
-        if self:valid_entity(enemy) then 
-            self:attack_enemy(enemy) 
-            return
+    if enemies then
+        for _, enemy in pairs(enemies) do 
+            if self:valid_entity(enemy) then 
+                self:attack_enemy(enemy) 
+                return
+            end
         end
     end
 
@@ -125,7 +130,7 @@ end
 
 function BaseGroup:attack_enemy(enemy)
 
-    for _, member in pairs(self.members) do 
+    for _, member in pairs(self.members) do
 
         local distance = util.get_distance(member.position, enemy.position) - 16
         local position = member.position

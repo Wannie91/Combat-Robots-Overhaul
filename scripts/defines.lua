@@ -31,6 +31,18 @@ modDefines.eventFilters = {
         filter = "name",
         name = modDefines.units.destroyer,
     },
+    {
+        filter = "ghost_name",
+        name = modDefines.units.defender,
+    },
+    {
+        filter = "ghost_name",
+        name = modDefines.units.sentry,
+    },
+    {
+        filter = "ghost_name",
+        name = modDefines.units.destroyer,
+    },
 }
 
 return modDefines

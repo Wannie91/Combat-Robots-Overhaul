@@ -1,9 +1,9 @@
 local util = {}
 
-util.get_group = function(table, player_index, surface_index)
+util.get_group = function(table, player_index, surface_index, force)
 
     for _, group in pairs(table) do 
-        if group.player.index == player_index and group.surface.index == surface_index then 
+        if group.player.index == player_index and group.surface.index == surface_index and group.force == force then 
             return group 
         end
     end

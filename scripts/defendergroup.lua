@@ -27,7 +27,7 @@ function DefenderGroup:remove_member(entity)
 
     BaseGroup.remove_member(self, entity)
 
-    if not self:has_members() and self.player.surface.index == self.surface.index then 
+    if not self:has_members() and self.player.physical_surface_index == self.surface.index then 
         self.player.set_shortcut_available("defend-player", false)
     end
 
@@ -35,7 +35,7 @@ end
 
 function DefenderGroup:stop_following_player()
 
-    for _, member in pairs(self.members) do 
+    for _, member in pairs(self.members) do
         member.follow_target = nil 
         member.autopilot_destination = nil
     end
@@ -92,7 +92,7 @@ end
 function DefenderGroup:create_speed_sticker(entity) 
 
     local speed_sticker = entity.surface.create_entity{name = "speed-sticker", target = entity, force = entity.force, position = entity.position}
-    speed_sticker.active = false 
+    -- speed_sticker.active = false 
 
     return speed_sticker
 
@@ -211,7 +211,7 @@ function DefenderGroup:update()
 
     if was_attacking and self.is_attacking then return end 
 
-    if self.player.is_shortcut_toggled("defend-player") and self.player.surface.index == self.surface.index and self:has_members() then 
+    if self.player.is_shortcut_toggled("defend-player") and self.player.physical_surface_index == self.surface.index and self:has_members() then 
 
         self:search_for_enemy_near_position(self.player.position, 32)
 

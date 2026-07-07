@@ -62,6 +62,7 @@ local animations =
                     -- frame_count = 1,
                     direction_count = 16,
                     shift = util.by_pixel(0, 0.25),
+                    scale = 0.5,
                   },
                   {
                     filename = "__base__/graphics/entity/defender-robot/defender-robot-mask.png",
@@ -137,166 +138,91 @@ local animations =
         }
     },
 
-    sentry_unit = 
-    -- {
-    --     idle =
-    --     {
-    --         filename = "__base__/graphics/entity/distractor-robot/distractor-robot.png",
-    --         priority = "high",
-    --         line_length = 16,
-    --         width = 38,
-    --         height = 33,
-    --         frame_count = 1,
-    --         direction_count = 16,
-    --         shift = util.by_pixel(0, -2.5),
-    --         scale = 0.5,
-    --     },
-    --     {
-    --         filename = "__base__/graphics/entity/distractor-robot/distractor-robot-mask.png",
-    --         priority = "high",
-    --         line_length = 16,
-    --         width = 24,
-    --         height = 21,
-    --         frame_count = 1,
-    --         direction_count = 16,
-    --         shift = util.by_pixel(0, -6.25),
-    --         apply_runtime_tint = true,
-    --         scale = 0.5,
-    --     },
-    --     shadow_idle =
-    --     {
-    --         filename = "__base__/graphics/entity/distractor-robot/distractor-robot-shadow.png",
-    --         priority = "high",
-    --         line_length = 16,
-    --         width = 49,
-    --         height = 30,
-    --         frame_count = 1,
-    --         direction_count = 16,
-    --         shift = util.by_pixel(32.5, 19),
-    --         draw_as_shadow = true,
-    --         scale = 0.5,
-    --     },
-    --     in_motion = 
-    --     {
-    --         filename = "__base__/graphics/entity/distractor-robot/distractor-robot.png",
-    --         priority = "high",
-    --         line_length = 16,
-    --         width = 38,
-    --         height = 33,
-    --         frame_count = 1,
-    --         direction_count = 16,
-    --         shift = util.by_pixel(0, -2.5),
-    --         y = 62,
-    --         scale = 0.5,
-    --     },
-    --     {
-    --         filename = "__base__/graphics/entity/distractor-robot/distractor-robot-mask.png",
-    --         priority = "high",
-    --         line_length = 16,
-    --         width = 24,
-    --         height = 21,
-    --         frame_count = 1,
-    --         direction_count = 16,
-    --         shift = util.by_pixel(0, -6.25),
-    --         apply_runtime_tint = true,
-    --         y = 37,
-    --         scale = 0.5,
-    --     },
-        
-    --     shadow_in_motion = 
-    --     {
-    --         filename = "__base__/graphics/entity/distractor-robot/distractor-robot-shadow.png",
-    --         priority = "high",
-    --         line_length = 16,
-    --         width = 49,
-    --         height = 30,
-    --         frame_count = 1,
-    --         direction_count = 16,
-    --         shift = util.by_pixel(32.5, 19),
-    --         scale = 0.5,
-    --         draw_as_shadow = true,
-    --     }
+    sentry_unit =
     {
+        render_layer = "air-entity-info-icon",
+        base_render_layer = "air-object",
+        animation = {
+            layers =
+            {
+                {
+                    filename = "__base__/graphics/entity/distractor-robot/distractor-robot.png",
+                    priority = "high",
+                    line_length = 16,
+                    width = 72,
+                    height = 62,
+                    direction_count = 16,
+                    shift = util.by_pixel(0, -2.5),
+                    scale = 0.5
+                },
+                {
+                    filename = "__base__/graphics/entity/distractor-robot/distractor-robot-mask.png",
+                    priority = "high",
+                    line_length = 16,
+                    width = 42,
+                    height = 37,
+                    direction_count = 16,
+                    shift = util.by_pixel(0, -6.25),
+                    apply_runtime_tint = true,
+                    scale = 0.5
+                }
+            }
+        },
 
-        idle =
+        base_animation =
         {
-          layers =
-          {
+            layers =
             {
-              filename = "__base__/graphics/entity/distractor-robot/distractor-robot.png",
-              priority = "high",
-              line_length = 16,
-              width = 72,
-              height = 62,
-              direction_count = 16,
-              shift = util.by_pixel(0, -2.5),
-              scale = 0.5
-            },
-            {
-              filename = "__base__/graphics/entity/distractor-robot/distractor-robot-mask.png",
-              priority = "high",
-              line_length = 16,
-              width = 42,
-              height = 37,
-              direction_count = 16,
-              shift = util.by_pixel(0, -6.25),
-              apply_runtime_tint = true,
-              scale = 0.5
+                {
+                    filename = "__base__/graphics/entity/distractor-robot/distractor-robot.png",
+                    priority = "high",
+                    line_length = 16,
+                    width = 72,
+                    height = 62,
+                    direction_count = 16,
+                    shift = util.by_pixel(0, -2.5),
+                    scale = 0.5
+                },
+                {
+                    filename = "__base__/graphics/entity/distractor-robot/distractor-robot-mask.png",
+                    priority = "high",
+                    line_length = 16,
+                    width = 42,
+                    height = 37,
+                    direction_count = 16,
+                    shift = util.by_pixel(0, -6.25),
+                    apply_runtime_tint = true,
+                    scale = 0.5
+                }
             }
-          }
+
         },
-        shadow_idle =
+
+        shadow_animation =
         {
-          filename = "__base__/graphics/entity/distractor-robot/distractor-robot-shadow.png",
-          priority = "high",
-          line_length = 16,
-          width = 96,
-          height = 59,
-          direction_count = 16,
-          shift = util.by_pixel(32.5, 19.25),
-          scale = 0.5,
-          draw_as_shadow = true
+            filename = "__base__/graphics/entity/distractor-robot/distractor-robot-shadow.png",
+            priority = "high",
+            line_length = 16,
+            width = 96,
+            height = 59,
+            animation_speed = 1,
+            direction_count = 16,
+            shift = util.by_pixel(32.5, 19.25),
+            scale = 0.5,
+            draw_as_shadow = true
         },
-        in_motion =
+
+        shadow_base_animation =
         {
-          layers =
-          {
-            {
-              filename = "__base__/graphics/entity/distractor-robot/distractor-robot.png",
-              priority = "high",
-              line_length = 16,
-              width = 72,
-              height = 62,
-              direction_count = 16,
-              shift = util.by_pixel(0, -2.5),
-              y = 62,
-              scale = 0.5
-            },
-            {
-              filename = "__base__/graphics/entity/distractor-robot/distractor-robot-mask.png",
-              priority = "high",
-              line_length = 16,
-              width = 42,
-              height = 37,
-              direction_count = 16,
-              shift = util.by_pixel(0, -6.25),
-              apply_runtime_tint = true,
-              y = 37,
-              scale = 0.5
-            }
-          }
-        },
-        shadow_in_motion =
-        {
-          filename = "__base__/graphics/entity/distractor-robot/distractor-robot-shadow.png",
-          priority = "high",
-          line_length = 16,
-          width = 96,
-          height = 59,
-          direction_count = 16,
-          shift = util.by_pixel(32.5, 19.25),
-          scale = 0.5,
-          draw_as_shadow = true
+            filename = "__base__/graphics/entity/distractor-robot/distractor-robot-shadow.png",
+            priority = "high",
+            line_length = 16,
+            width = 96,
+            height = 59,
+            direction_count = 16,
+            shift = util.by_pixel(32.5, 19.25),
+            scale = 0.5,
+            draw_as_shadow = true
         }
     },
     

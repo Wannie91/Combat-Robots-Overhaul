@@ -1,4 +1,127 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.32
+Date: 24.06.2026
+  Changes:
+    - Updated to Factorio 2.1.
+---------------------------------------------------------------------------------------------------
+Version: 2.1.31
+Date: 27.02.2026
+  Bugfixes:
+    - Fixed Crash when selecting combat robots with s blueprint while holding shift
+---------------------------------------------------------------------------------------------------
+Version: 2.1.30
+Date: 24.12.2025
+  Changes:
+    - Thanks to TheAppleIsALie, KS Combat Revival is now compatible with Combat Robot Overhaul. 
+---------------------------------------------------------------------------------------------------
+Version: 2.1.29
+Date: 25.11.2025
+  Bugfixes:
+    - Fixed Issue with defender units when changing surface
+---------------------------------------------------------------------------------------------------
+Version: 2.1.28
+Date: 12.09.2025
+  Changes:
+    - Disabled the autopilot line on map view
+  Bugfixes:
+    - Fixed the event filters that caused issues when placing other entities
+---------------------------------------------------------------------------------------------------
+Version: 2.1.27
+Date: 12.09.2025
+  Bugfixes:
+    - Fixed an crash when placing space platform tiles
+---------------------------------------------------------------------------------------------------
+Version: 2.1.26
+Date: 10.09.2025
+  Bugfixes:
+    - Fixed error when mining ghost entities 
+---------------------------------------------------------------------------------------------------
+Version: 2.1.25
+Date: 06.09.2025
+  Changes:
+    - Capsules now use the new icons
+    - Changed sentry types to spider-unit to make them more useful.
+    - Capsules can now be placed as ghosts, allowing them to be placed in remote view
+---------------------------------------------------------------------------------------------------
+Version: 2.1.24
+Date: 18.03.2025
+  Changes:
+    - Combat Robots will now slowly take damage when being inside an ash cloud from a demolisher 
+---------------------------------------------------------------------------------------------------
+Version: 2.1.23
+Date: 17.03.2025
+  Bugfixes:
+    - Fixed a bug which caused captured biter nests not being removed from the target list
+---------------------------------------------------------------------------------------------------
+Version: 2.1.22
+Date: 06.12.2024
+  Changes:
+    - Added the empty Layers due pathfinding issues again
+---------------------------------------------------------------------------------------------------
+Version: 2.1.21
+Date: 04.12.2024
+  Changes:
+    - Removed the lack of collision layers from the combat robots. They are now vulnerable to demolishers attacks.
+  Bugfixes:
+    - Fixed Issue with the Clean command
+---------------------------------------------------------------------------------------------------
+Version: 2.1.20
+Date: 21.11.2024
+  Bugfixes:
+    - Removed "player-creation" from spider leg to remove the blue squares
+---------------------------------------------------------------------------------------------------
+Version: 2.1.19
+Date: 20.11.2024
+  Bugfixes:
+    - Restored Destroyer damage back to 20
+    - Disabled Vanilla robot recipes that were active in game
+---------------------------------------------------------------------------------------------------
+Version: 2.1.18
+Date: 20.11.2024
+  Changes:
+    - Fixed Vanilla Robots receipes showing despite being disabled
+    - Cleaned up Factoriopedia
+  Bugfixes:
+    - Robots do not create ghosts upon death anymore
+---------------------------------------------------------------------------------------------------
+Version: 2.1.17
+Date: 10.11.2024
+  Changes:
+    - Quality now applies to combat robots
+    - Added custom command that cleans invalid data. Used by entering /clean_invalid_data in console
+    - Adjusted the recipes slightly
+    - Active-defense-equipment of destroyer and defender units replaced with guns due quality
+  Bugfixes:
+    - Fixed a bug where the segments of a demolisher caused the game to crash. 
+---------------------------------------------------------------------------------------------------
+Version: 2.1.16
+Date: 05.11.2024
+  Changes:
+    - Replaced destroyer prerequisite from follower-robot-count-4 with defender
+    - Replaced destroyer prerequisite in electric-weapons-damage-1 with defender
+---------------------------------------------------------------------------------------------------
+Version: 2.1.15
+Date: 02.11.2024
+  Bugfixes:
+    - Fixed Crash when selecting destroyer & destroyer units with blueprint item by making them not blueprintable
+    - Fixed Crash when playing PvP which caused invalid units to not be removed from the group
+    - Added Migration to 2.1.15
+---------------------------------------------------------------------------------------------------
+Version: 2.1.14
+Date: 29.10.2024
+  Bugfixes:
+    - Fixed first sprite rendering of defender robot. 
+---------------------------------------------------------------------------------------------------
+Version: 2.1.13
+Date: 26.10.2024
+  Bufifxes:
+    - Fixed Crash when loading Prototype definition
+---------------------------------------------------------------------------------------------------
+Version: 2.1.12
+Date: 25.10.2024
+  Bugfixes:
+    - When Combat Robots are damaged they show the correct icon in the alert
+---------------------------------------------------------------------------------------------------
 Version: 2.1.11
 Date: 25.10.2024
   Bugfixes:
